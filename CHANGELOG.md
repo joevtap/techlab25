@@ -12,5 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `frontend` and `backend` packages in npm workspace
 - Vite ReactJS with Typescript project in `frontend` package
 - This `CHANGELOG.md` file
+- Jest to `backend` package
 
 [unreleased]: https://github.com/joevtap/techlab25/compare/HEAD^...HEAD

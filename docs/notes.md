@@ -153,3 +153,46 @@ Rodei `npm i -w frontend` para instalar as dependências do projeto Vite no _pac
 Rodei `npm run dev -w frontend` de modo a assegurar que o projeto front-end estava configurado como o esperado.
 
 Com o front-end configurado e a documentação feita, commitei o progresso.
+
+Continuando o processo de configuração inicial, configurei o [Jest Test Runner](https://jestjs.io/) no _package_ `backend`.
+
+Para isso rodei `npm i -w backend -D typescript jest ts-node ts-jest @types/jest @types/node`.
+
+Também rodei `cd packages/backend && npx tsc --init && npx ts-jest config:init`
+
+Adicionei configurações relacionadas a _test coverage_:
+
+```js
+// packages/backend/jest.config.js
+
+// ...
+
+module.exports = {
+  testEnvironment: "node",
+
+  // Coverage
+  collectCoverage: true,
+  coverageDirectory: "coverage",
+  coverageProvider: "v8",
+
+  // ...
+};
+```
+
+Criei uma pasta `__tests__` com um arquivo de teste de exemplo `main.test.ts`.
+
+Rodei, no top-level do repositório, `npm run test -w backend` para assegurar que a configuração estava correta.
+
+Instalei outras dependências necessárias para começar o projeto com `npm i -w backend express inversify@alpha reflect-metadata` e `npm i -w backend -D @types/express`.
+
+Me certifiquei que `experimentalDecorators` e `emitDecoratorMetadata` estavam marcados como `true` no `tsconfig.json` para o correto funcionamento do [InversifyJS](https://inversify.io/)
+
+**Links úteis de documentação**
+
+- https://inversify.io/docs/introduction/getting-started
+- https://jestjs.io/docs/getting-started
+- https://kulshekhar.github.io/ts-jest/docs/getting-started/installation
+- https://vite.dev/guide
+- https://docs.npmjs.com/cli/v8/using-npm/workspaces
+
+Feito isso, já posso começar o desenvolvimento do back-end.
