@@ -2,8 +2,9 @@
   "name": "backend",
   "version": "0.0.0",
   "description": "back-end part of the TechLab 2025 challenge",
-  "main": "index.js",
+  "main": "src/main.ts",
   "scripts": {
+    "dev": "tsx --watch src/main.ts",
     "test": "jest"
   },
   "author": "joelvtorres2024@gmail.com",
@@ -20,6 +21,7 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.3.4",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }
 }
