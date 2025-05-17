@@ -24,7 +24,7 @@ e outra back-end, além de documentação extensiva, boa cobertura de testes e e
 os fundamentos do _Clean Code_ e do _Clean Architecture_.
 
 Apesar de ser o mais trabalhoso dentre os três, acredito que seja também o que permite mais facilmente que uma pessoa se destaque com sua entrega.
-Isso porque, devido ao tamanho da sua entrega e da exigência de qualidade no código, entregas realmente boas facilmente aparecem dentre as demais. 
+Isso porque, devido ao tamanho da sua entrega e da exigência de qualidade no código, entregas realmente boas facilmente aparecem dentre as demais.
 
 ## 17-05-2025
 
@@ -39,13 +39,13 @@ O desafio WebApp, como disse anteriormente, possui os seguintes critérios de av
 - Deve possuir boa cobertura de testes de unidade (entendo que isso não significa 100% de _code coverage_, mas uma cobertura de testes que faça sentido)
 - Deve possuir documentação a respeito de todas as decisões de design e arquitetura, como fazer a execução do projeto, etc. (entendo que quanto mais documentação, melhor)
 - O código deve seguir boas práticas de programação orientada a objetos, _Clean Code_ e _Clean Architecture_ (entendo que os conceitos fundamentais
-são exigidos, não a estrutura exatamente como descrita nessas fontes)
+  são exigidos, não a estrutura exatamente como descrita nessas fontes)
 - Deve-se utilizar um sistema de controle de versão, no caso o Git
 
 Além disso, possui o seguinte enunciado:
 
-Deve ser elaborada uma aplicação de controle financeiro. Deve ser possível fazer o cadastro e gerenciamento de contas bancárias. 
-São esperadas operações de transferência entre contas, débito e cŕedito.
+Deve ser elaborada uma aplicação de controle financeiro. Deve ser possível fazer o cadastro e gerenciamento de contas bancárias.
+São esperadas operações de transferência entre contas, débito e crédito.
 
 Ou seja, o enunciado dá certa liberdade sobre a aplicação que será desenvolvida, desde que possua as ideias gerais de contas bancárias, operações de crédito e débito e transferência entre contas.
 
@@ -61,12 +61,12 @@ Considerando o enunciado do desafio, a aplicação que irei desenvolver é uma a
 - Um usuário pode transferir valores de uma de suas contas bancárias para outra conta bancária sob outro CPF
 - Um usuário pode receber valores de uma conta bancária sob outro CPF em uma de suas contas bancárias
 
-Para isso, primeiro seram desenvolvidas as funcionalidades no contexto de um único CPF, pois isso já cumpre os requisitos do desafio.
+Para isso, primeiro serão desenvolvidas as funcionalidades no contexto de um único CPF, pois isso já cumpre os requisitos do desafio.
 Feito isso, adicionar a possibilidade de transferência entre CPFs diferentes é trivial.
 
 ### Meus objetivos no desafio
 
-Meu principal objetivo no desafio é fazer a entrega completa do desafio WebApp. Como disse anteriormente, é o desafio que considero mais trabalhoso dentre os 3 propostos, mas também é 
+Meu principal objetivo no desafio é fazer a entrega completa do desafio WebApp. Como disse anteriormente, é o desafio que considero mais trabalhoso dentre os 3 propostos, mas também é
 o que mais se encaixa com o meu perfil de desenvolvedor, o que me permite aplicar muito do meu conhecimento.
 
 A entrega é bastante extensa, exigindo documentação abrangente, boa cobertura de testes e boas práticas de programação em todas as partes do projeto, o que faz a entrega completa uma excelente conquista.
@@ -92,7 +92,7 @@ Decisões técnicas tomadas a respeito da organização:
 - Não utilizarei Kanban, Scrum, etc., visto que sou uma pessoa só e não há necessidade de métodos elaborados para organização das tarefas
 - O progresso no código e na execução das tarefas será rastreado puramente pelo versionamento do código com Git, Tags, SemVer e Change Log
 - As tarefas serão acompanhadas com TODO lists simples em um arquivo markdown no repositório, haverá também um roadmap das funcionalidades que serão implementadas
-(novamente, porque sou uma pessoa só)
+  (novamente, porque sou uma pessoa só)
 - O modelo de branching do repositório seguirá o padrão Trunk Based, visto que é simples e direto, o que é tudo que eu preciso
 
 #### Design e arquitetura
@@ -125,10 +125,10 @@ Boas práticas fomentadas nesse projeto:
 
 ### Tarefas iniciais
 
-- [ ] Fazer o scallfolding das aplicações front-end e back-end em um monorepo, utilizando NPM Workspaces
+- [x] Fazer o scaffolding das aplicações front-end e back-end em um monorepo, utilizando NPM Workspaces
 - [ ] Começar pelo contexto delimitado de autenticação, fazendo um sistema básico de autenticação com token JWT
 - [ ] Ligar o front-end ao módulo de autenticação do back-end
-  - [ ] Utilizar uma biblioteca de UI no front-end, provavelmente shadcn/ui pela conveniẽncia
+  - [ ] Utilizar uma biblioteca de UI no front-end, provavelmente shadcn/ui pela conveniência
 - [ ] Escrever testes e documentar o que foi feito, incluindo diagramas
 
 ### Considerações para próximos passos
@@ -139,3 +139,17 @@ Boas práticas fomentadas nesse projeto:
 - Definir melhor o critério de pronto (atualmente eu diria que uma feature está pronta quando existe no front-end e no back-end, está testada e documentada)
 - Fazer roadmap
 - Elaborar documentação sobre o plano de testes
+
+### Iniciando o projeto
+
+Para isso, comecei atualizando a versão do NodeJS para a LTS mais recente, no momento `v22.15.1`.
+
+Iniciei um [npm workspace](https://docs.npmjs.com/cli/v8/using-npm/workspaces) com `npm init -y`, atualizei algumas informações no `package.json` e prossegui com `npm init -w ./packages/backend -y`.
+
+Iniciei um projeto Vite com ReactJS e Typescript com o comando `npm create vite@latest` no diretório `packages/`, passando o nome do projeto como `frontend` e selecionando a opção desejada de ReactJS + Typescript. Adicionei o workspace `frontend` manualmente no `package.json` no top-level do repositório.
+
+Rodei `npm i -w frontend` para instalar as dependências do projeto Vite no _package_ `frontend`.
+
+Rodei `npm run dev -w frontend` de modo a assegurar que o projeto front-end estava configurado como o esperado.
+
+Com o front-end configurado e a documentação feita, commitei o progresso.

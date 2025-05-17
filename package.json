@@ -1,0 +1,26 @@
+{
+  "name": "techlab25",
+  "version": "0.0.0",
+  "description": "Repositório do desafio WebApp do TechLab 2025, desafio de programação, IA e automação organizado pela Tech4Humans em parceria com o CEU UNIFEI",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joevtap/techlab25.git"
+  },
+  "keywords": [],
+  "author": "joelvtorres2024@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joevtap/techlab25/issues"
+  },
+  "homepage": "https://github.com/joevtap/techlab25#readme",
+  "workspaces": [
+    "packages/frontend",
+    "packages/backend"
+  ]
+}
