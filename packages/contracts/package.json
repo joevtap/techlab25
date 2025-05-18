@@ -1,0 +1,8 @@
+{
+  "name": "@techlab25/contracts",
+  "private": true,
+  "version": "0.0.0",
+  "author": "joelvtorres2024@gmail.com",
+  "license": "MIT",
+  "main": "dist/index.js"
+}

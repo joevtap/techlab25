@@ -9,4 +9,6 @@ container.bind(Symbol.for("consumer")).to(Consumer);
 
 const consumer = container.get<Consumer>(Symbol.for("consumer"));
 
-consumer.consume("World");
+export function main() {
+  consumer.consume("World");
+}

@@ -1,6 +1,8 @@
 {
-  "name": "frontend",
+  "name": "@techlab25/frontend",
   "private": true,
+  "author": "joelvtorres2024@gmail.com",
+  "license": "MIT",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -10,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@techlab25/contracts": "*",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

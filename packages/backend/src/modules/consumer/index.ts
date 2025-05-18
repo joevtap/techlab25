@@ -1,8 +1,5 @@
+import { IProducer } from "@techlab25/contracts";
 import { inject, injectable } from "inversify";
-
-interface IProducer {
-  hello: (name: string) => string;
-}
 
 @injectable()
 export class Consumer {

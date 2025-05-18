@@ -1,15 +1,17 @@
 {
-  "name": "backend",
-  "version": "0.0.0",
-  "description": "back-end part of the TechLab 2025 challenge",
-  "main": "src/main.ts",
-  "scripts": {
-    "dev": "tsx --watch src/main.ts",
-    "test": "jest"
-  },
+  "name": "@techlab25/backend",
+  "private": true,
   "author": "joelvtorres2024@gmail.com",
   "license": "MIT",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "tsx --watch index.ts",
+    "test": "jest"
+  },
   "dependencies": {
+    "@techlab25/contracts": "*",
     "express": "^5.1.0",
     "inversify": "^7.0.0-alpha.5",
     "reflect-metadata": "^0.2.2"
