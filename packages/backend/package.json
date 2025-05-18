@@ -16,6 +16,7 @@
     "@techlab25/contracts": "*",
     "express": "^5.1.0",
     "inversify": "^7.0.0-alpha.5",
+    "nanoid": "^5.1.5",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

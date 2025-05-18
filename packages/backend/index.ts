@@ -1,3 +1,1 @@
-import { main } from './src/main';
-
-main();
+import './src/di';
