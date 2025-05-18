@@ -11,6 +11,8 @@ module.exports = {
   coverageDirectory: "coverage",
   coverageProvider: "v8",
 
+  testPathIgnorePatterns: ["dist/"],
+
   transform: {
     ...tsJestTransformCfg,
   },
