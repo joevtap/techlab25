@@ -166,12 +166,12 @@ Adicionei configurações relacionadas a _test coverage_:
 // ...
 
 module.exports = {
-  testEnvironment: "node",
+  testEnvironment: 'node',
 
   // Coverage
   collectCoverage: true,
-  coverageDirectory: "coverage",
-  coverageProvider: "v8",
+  coverageDirectory: 'coverage',
+  coverageProvider: 'v8',
 
   // ...
 };
@@ -210,9 +210,9 @@ A única alteração que faço na declaração de dependência é mudar a versã
   "name": "@techlab25/backend",
   // ...
   "dependencies": {
-    "@techlab25/contracts": "*"
+    "@techlab25/contracts": "*",
     // ...
-  }
+  },
 
   // ...
 }
@@ -238,8 +238,8 @@ Para isso, apaguei o `tsconfig.json` definido no pacote `backend` e criei um `ts
     "declarationMap": true,
     "incremental": true,
     "skipLibCheck": true,
-    "noEmitOnError": true
-  }
+    "noEmitOnError": true,
+  },
 }
 ```
 
@@ -249,9 +249,9 @@ O `tsconfig.json` dos pacotes, então, herdam do `tsconfig.base.json`
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
   },
-  "references": [{ "path": "../contracts" }]
+  "references": [{ "path": "../contracts" }],
 }
 ```
 
@@ -262,8 +262,8 @@ Observe a chave `references` no snippet acima. Isso também é utilizado em um a
   "files": [],
   "references": [
     { "path": "./packages/backend" },
-    { "path": "./packages/contracts" }
-  ]
+    { "path": "./packages/contracts" },
+  ],
 }
 ```
 
@@ -288,8 +288,8 @@ export interface IProducer {
 ```ts
 // packages/backend/src/modules/producer/index.ts
 
-import { IProducer } from "@techlab25/contracts";
-import { injectable } from "inversify";
+import { IProducer } from '@techlab25/contracts';
+import { injectable } from 'inversify';
 
 @injectable()
 export class Producer implements IProducer {
@@ -302,13 +302,13 @@ export class Producer implements IProducer {
 ```ts
 // packages/backend/src/modules/consumer/index.ts
 
-import { IProducer } from "@techlab25/contracts";
-import { inject, injectable } from "inversify";
+import { IProducer } from '@techlab25/contracts';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class Consumer {
   constructor(
-    @inject(Symbol.for("producer")) private readonly producer: IProducer
+    @inject(Symbol.for('producer')) private readonly producer: IProducer,
   ) {}
 
   public consume(name: string) {
@@ -320,18 +320,76 @@ export class Consumer {
 ```ts
 // packages/backend/src/main.ts
 
-import { Container } from "inversify";
-import { Producer } from "./modules/producer";
-import { Consumer } from "./modules/consumer";
+import { Container } from 'inversify';
+import { Producer } from './modules/producer';
+import { Consumer } from './modules/consumer';
 
 const container: Container = new Container();
 
-container.bind(Symbol.for("producer")).to(Producer);
-container.bind(Symbol.for("consumer")).to(Consumer);
+container.bind(Symbol.for('producer')).to(Producer);
+container.bind(Symbol.for('consumer')).to(Consumer);
 
-const consumer = container.get<Consumer>(Symbol.for("consumer"));
+const consumer = container.get<Consumer>(Symbol.for('consumer'));
 
-consumer.consume("World");
+consumer.consume('World');
 ```
 
 Assim, módulos ficam completamente desacoplados uns dos outros, apenas dependendo de interfaces.
+
+### Configurando formatação de código em todos os pacotes
+
+Para isso utilizo o `Prettier`.
+
+Instalo em todos os pacotes por meio do comando `npm i --workspaces -D --save-exact prettier`.
+
+Crio um `.prettierrc` na raiz do projeto e `.prettierignore`s em cada pacote, especificando o que deve ser ignorado na formatação em cada um.
+
+Adiciono o script `format` no `package.json` de cada pacote.
+
+```jsonc
+{
+  // ...
+
+  "format": "prettier . --write",
+
+  // ...
+}
+```
+
+E no `package.json` do projeto adiciono:
+
+```jsonc
+{
+  // ...
+
+  "scripts": {
+    "format": "npm run format --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+
+    // ...
+  },
+
+  // ...
+}
+```
+
+Para os testes, como mostrado no snippet acima, é a mesma ideia.
+
+### Linter?
+
+Utilizei o ESlint. Optei pela configuração padrão ao rodar `npm init @eslint/config@latest` em cada pacote (`backend` e `contracts`, o `frontend` já tem o ESLint configurado).
+
+Configurei o ESLint para ignorar os diretórios de build e outros arquivos de configuração nos pacotes.
+
+```js
+// ...
+
+export default defineConfig([
+  { ignores: ['dist/**/*', 'coverage/**/*', 'jest.config.js'] },
+  // ...
+]);
+```
+
+Adicionei o script `lint`, como fiz com o `format` e `test` acima.
+
+Testando todos os scripts definidos no `package.json` do repositório, está tudo funcionando.
