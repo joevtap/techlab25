@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist",
     "paths": {
-      "@core/*": ["./src/core/*"]
+      "@core/*": ["./src/core/*"],
+      "@auth/*": ["./src/modules/auth/*"]
     }
   },
   "references": [{ "path": "../contracts" }]

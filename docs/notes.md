@@ -393,3 +393,12 @@ export default defineConfig([
 Adicionei o script `lint`, como fiz com o `format` e `test` acima.
 
 Testando todos os scripts definidos no `package.json` do repositório, está tudo funcionando.
+
+```sh
+export $(cat .env.development | xargs)
+
+npm run -w @techlab25/backend typeorm migration:generate -- -d ./src/infrastructure/orm/data-source.ts ./src/infrastructure/orm/migrations/User
+
+npm run -w @techlab25/backend typeorm migration:run -- --dataSource src/infrastructure/orm/data-source.ts
+
+```

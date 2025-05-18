@@ -7,17 +7,22 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node .",
-    "dev": "tsx --watch index.ts",
+    "dev": "tsx --watch --env-file=\".env.development\" index.ts",
     "format": "prettier . --write",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "typeorm": "export $(cat .env.development | xargs) && typeorm-ts-node-commonjs"
   },
   "dependencies": {
     "@techlab25/contracts": "*",
     "express": "^5.1.0",
     "inversify": "^7.0.0-alpha.5",
     "nanoid": "^5.1.5",
-    "reflect-metadata": "^0.2.2"
+    "pg": "^8.16.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.24",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
