@@ -106,11 +106,9 @@ um **monólito modular**.
 
 Módulos (contextos delimitados, no design) isolados são coesos e independentes. Um módulo não precisa saber da existência de outro, apenas precisa conhecer suas interfaces.
 
-Para garantir que os módulos sejam desacoplados, seguirei o padrão _consumer-defined interfaces_, isto é, um módulo X,
-que depende de uma classe num módulo Y, declara a interface que representa essa dependência no seu lado da aplicação (consumidor), em vez do lado produtor (módulo Y).
+Para garantir que os módulos sejam desacoplados, definirei um pacote compartilhado entre as aplicações (front-end e back-end) chamado `contracts`. Esse pacote tem o papel somente de exportar interfaces que serão implementadas no módulo a qual pertence e referenciadas no módulo do qual é dependência.
 
-Isso fere o princípio DRY (_Don't Repeat Yourself_), porque, no TypeScript, a implementação de uma interface é explícita e, assim, haverá duplicação do código da interface
-no lado do consumidor e do produtor. Considero isso uma decisão arquitetural válida, porque permite uma evolução futura da estrutura monolítica da aplicação de maneira direta.
+Como é um pacote compartilhado no monorepo, o front-end também pode ter conhecimento dos contratos, o que pode ser útil para comunicação com o back-end.
 
 Cada contexto delimitado do modelo da aplicação será traduzido em um módulo no código fonte. Dentro de cada módulo vive uma estrutura que remete à _Clean Architecture_, ou à Arquitetura Hexagonal (Portas e Adaptadores).
 
@@ -196,3 +194,144 @@ Me certifiquei que `experimentalDecorators` e `emitDecoratorMetadata` estavam ma
 - https://docs.npmjs.com/cli/v8/using-npm/workspaces
 
 Feito isso, já posso começar o desenvolvimento do back-end.
+
+## 18-05-2025
+
+Comecei o dia refinando o que fiz no dia anterior.
+
+Primeiro, renomeei os pacotes (por meio do `package.json` de cada um) para incluir um _scope_: `techlab25`. Assim, no momento de declarar que um pacote depende de outro, conflitos de nome são evitados.
+
+Para declarar, por exemplo, que o pacote `@techlab25/backend` depende do pacote `@techlab25/contracts` eu rodo `npm i @techlab25/contracts -w @techlab25/backend` e a dependência é mapeada corretamente.
+
+A única alteração que faço na declaração de dependência é mudar a versão definida para `*`, só por uma questão semântica, significando que um pacote depende sempre da última versão do outro pacote.
+
+```jsonc
+{
+  "name": "@techlab25/backend",
+  // ...
+  "dependencies": {
+    "@techlab25/contracts": "*"
+    // ...
+  }
+
+  // ...
+}
+```
+
+Também configurei o Typescript para o monorepo (basicamente este projeto que utiliza NPM workspaces para seu gerenciamento).
+
+Para isso, apaguei o `tsconfig.json` definido no pacote `backend` e criei um `tsconfig.base.json` na raiz do repositório.
+
+```jsonc
+{
+  "compilerOptions": {
+    "target": "ES2020", // Mesma versão usada no tsconfig.json do frontend, por conveniência
+    "module": "commonjs",
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
+    "skipLibCheck": true,
+    "noEmitOnError": true
+  }
+}
+```
+
+O `tsconfig.json` dos pacotes, então, herdam do `tsconfig.base.json`
+
+```jsonc
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist"
+  },
+  "references": [{ "path": "../contracts" }]
+}
+```
+
+Observe a chave `references` no snippet acima. Isso também é utilizado em um arquivo `tsconfig.json` na raiz do projeto.
+
+```jsonc
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/backend" },
+    { "path": "./packages/contracts" }
+  ]
+}
+```
+
+`"files": []` é um truque para evitar recompilação dos arquivos, como orientado na documentação do Typescript.
+
+Esse `references` vai permitir o autocompletion dos imports, bem como a validação em tempo de compilação das referências que cada pacote faz.
+
+Sempre que uma dependência de um pacote para outro é declarada, por meio do `npm i`, também é necessário referenciar o pacote no `tsconfig.json` do dependente.
+
+Toda essa configuração permite o desacoplamento dos contratos (interfaces e tipos) das implementações.
+
+No back-end, isso permite o seguinte:
+
+```ts
+// packages/contracts/producer/IProducer.ts
+
+export interface IProducer {
+  hello: (name: string) => string;
+}
+```
+
+```ts
+// packages/backend/src/modules/producer/index.ts
+
+import { IProducer } from "@techlab25/contracts";
+import { injectable } from "inversify";
+
+@injectable()
+export class Producer implements IProducer {
+  public hello(name: string): string {
+    return `Hello, ${name}!`;
+  }
+}
+```
+
+```ts
+// packages/backend/src/modules/consumer/index.ts
+
+import { IProducer } from "@techlab25/contracts";
+import { inject, injectable } from "inversify";
+
+@injectable()
+export class Consumer {
+  constructor(
+    @inject(Symbol.for("producer")) private readonly producer: IProducer
+  ) {}
+
+  public consume(name: string) {
+    console.log(this.producer.hello(name));
+  }
+}
+```
+
+```ts
+// packages/backend/src/main.ts
+
+import { Container } from "inversify";
+import { Producer } from "./modules/producer";
+import { Consumer } from "./modules/consumer";
+
+const container: Container = new Container();
+
+container.bind(Symbol.for("producer")).to(Producer);
+container.bind(Symbol.for("consumer")).to(Consumer);
+
+const consumer = container.get<Consumer>(Symbol.for("consumer"));
+
+consumer.consume("World");
+```
+
+Assim, módulos ficam completamente desacoplados uns dos outros, apenas dependendo de interfaces.

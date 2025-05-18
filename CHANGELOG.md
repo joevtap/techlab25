@@ -13,5 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Vite ReactJS with Typescript project in `frontend` package
 - This `CHANGELOG.md` file
 - Jest to `backend` package
+- Typescript support for npm workspace/monorepo
 
 [unreleased]: https://github.com/joevtap/techlab25/compare/HEAD^...HEAD
