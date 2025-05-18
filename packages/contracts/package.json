@@ -4,5 +4,11 @@
   "version": "0.0.0",
   "author": "joelvtorres2024@gmail.com",
   "license": "MIT",
-  "main": "dist/index.js"
+  "main": "dist/index.js",
+  "scripts": {
+    "format": "prettier . --write"
+  },
+  "devDependencies": {
+    "prettier": "3.5.3"
+  }
 }

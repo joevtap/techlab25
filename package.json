@@ -13,6 +13,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "format": "npm run format --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "build": "tsc -b"
   },

@@ -1,1 +1,1 @@
-export * from "./IProducer";
+export * from './IProducer';

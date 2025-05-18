@@ -1,5 +1,5 @@
-import { IProducer } from "@techlab25/contracts";
-import { injectable } from "inversify";
+import { IProducer } from '@techlab25/contracts';
+import { injectable } from 'inversify';
 
 @injectable()
 export class Producer implements IProducer {
