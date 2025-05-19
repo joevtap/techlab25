@@ -12,6 +12,9 @@ import { UserEntity } from './infrastructure/orm/entities';
 import { TypeOrmUserRepository } from './infrastructure/repositories/TypeOrmUserRepository';
 import { BcryptPasswordHasher } from './infrastructure/services/BcryptPasswordHasher';
 import { Module } from '../../core/application/Module';
+import { SignUserInUseCase } from './application/use-cases/SignUserInUseCase/SignUserInUseCase';
+import { ITokenService } from './domain/services/ITokenService';
+import { JwtTokenService } from './infrastructure/services/JwtTokenService';
 
 export class AuthModule extends Module {
   public readonly name = 'auth';
@@ -36,6 +39,14 @@ export class AuthModule extends Module {
     container
       .bind<CreateUserUseCase>(Symbol.for('CreateUserUseCase'))
       .to(CreateUserUseCase);
+
+    container
+      .bind<SignUserInUseCase>(Symbol.for('SignUserInUseCase'))
+      .to(SignUserInUseCase);
+
+    container
+      .bind<ITokenService>(Symbol.for('TokenService'))
+      .to(JwtTokenService);
 
     container
       .bind<AuthController>(Symbol.for('AuthController'))

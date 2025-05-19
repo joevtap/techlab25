@@ -56,11 +56,10 @@ export class CreateUserUseCase {
 
       return Result.ok<CreateUserOutput>({ userId: id.toString() });
     } catch (error) {
-      switch (error) {
-        case ValidationError:
-          return Result.fail(error as ValidationError);
-        case BusinessRuleViolationError:
-          return Result.fail(error as BusinessRuleViolationError);
+      if (error instanceof ValidationError) {
+        return Result.fail(error);
+      } else if (error instanceof BusinessRuleViolationError) {
+        return Result.fail(error);
       }
 
       return Result.fail(

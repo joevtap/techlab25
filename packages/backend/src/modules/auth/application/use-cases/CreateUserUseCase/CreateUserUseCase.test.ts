@@ -2,9 +2,8 @@ import {
   MockUserRepository,
   MockIdGenerator,
   MockPasswordHasher,
-} from './mocks';
+} from '../mocks';
 import { CreateUserUseCase } from './CreateUserUseCase';
-
 import { CreateUserDto } from '../../dtos/CreateUserDto';
 
 describe('CreateUserUseCase', () => {
