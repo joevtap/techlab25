@@ -1,8 +1,7 @@
 import { exit } from 'process';
-import { initializeDiContainer } from './di';
+import { container, initializeDiContainer, modules } from './di';
 import { applicationDataSource } from './infrastructure/orm/data-source';
 import express from 'express';
-import { createAuthModule } from './modules/auth/api/app';
 
 export async function main() {
   try {
@@ -13,9 +12,16 @@ export async function main() {
     console.log('DI container initialized');
 
     const app = express();
+
     app.use(express.json());
 
-    app.use(createAuthModule());
+    modules.forEach((m) => {
+      const base = m.name;
+
+      m.routers(container).forEach(({ path, router }) => {
+        app.use(`/${base}${path && path}`, router);
+      });
+    });
 
     app.listen(3000, () => {
       console.log('Server running on port 3000');

@@ -16,7 +16,6 @@
     "typeorm": "export $(cat .env.development | xargs) && typeorm-ts-node-commonjs"
   },
   "dependencies": {
-    "@techlab25/contracts": "*",
     "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "inversify": "^7.0.0-alpha.5",

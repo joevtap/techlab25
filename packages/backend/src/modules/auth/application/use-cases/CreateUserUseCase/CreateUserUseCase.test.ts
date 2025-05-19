@@ -5,7 +5,7 @@ import {
 } from './mocks';
 import { CreateUserUseCase } from './CreateUserUseCase';
 
-import { CreateUserDto } from '@techlab25/contracts/dtos/auth/CreateUserDto';
+import { CreateUserDto } from '../../dtos/CreateUserDto';
 
 describe('CreateUserUseCase', () => {
   let useCase: CreateUserUseCase;

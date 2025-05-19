@@ -1,7 +1,8 @@
 import { inject, injectable } from 'inversify';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, Router } from 'express';
 import { z } from 'zod';
 import { CreateUserUseCase } from '../../../application/use-cases/CreateUserUseCase';
+import { errorHandler } from '../../middleware/error';
 
 const createUserSchema = z.object({
   email: z.string().email(),
@@ -10,13 +11,23 @@ const createUserSchema = z.object({
 });
 
 @injectable()
-export class UserController {
+export class AuthController {
+  public readonly router: Router;
+
   public constructor(
     @inject(Symbol.for('CreateUserUseCase'))
     private readonly createUserUseCase: CreateUserUseCase,
-  ) {}
+  ) {
+    this.router = Router();
+    this.bindRoutes();
+    this.router.use(errorHandler);
+  }
 
-  public async SignUp(
+  private bindRoutes() {
+    this.router.post('/signup', this.signUp.bind(this));
+  }
+
+  public async signUp(
     req: Request,
     res: Response,
     next: NextFunction,

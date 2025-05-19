@@ -24,7 +24,6 @@
   },
   "workspaces": [
     "packages/frontend",
-    "packages/backend",
-    "packages/contracts"
+    "packages/backend"
   ]
 }

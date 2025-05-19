@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { User } from '../../../domain/entities/User';
 import { HashedPassword } from '../../../domain/value-objects';
-import { CreateUserDto } from '@techlab25/contracts/dtos/auth/CreateUserDto';
+import { CreateUserDto } from '../../dtos/CreateUserDto';
 import { Result } from '../../../../../core/application/Result';
 import {
   BusinessRuleViolationError,
