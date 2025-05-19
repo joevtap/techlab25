@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@techlab25/contracts": "*",
+    "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "inversify": "^7.0.0-alpha.5",
     "nanoid": "^5.1.5",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.18",

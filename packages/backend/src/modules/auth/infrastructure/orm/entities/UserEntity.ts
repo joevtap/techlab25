@@ -8,9 +8,9 @@ export class UserEntity {
   @Column({ unique: true, type: 'text' })
   email!: string;
 
-  @Column({ unique: true, type: 'text' })
+  @Column({ type: 'text' })
   username!: string;
 
   @Column({ name: 'password_hash' })
-  passwordHash!: string;
+  hashedPassword!: string;
 }

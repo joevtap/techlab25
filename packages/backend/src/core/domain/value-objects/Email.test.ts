@@ -1,26 +1,26 @@
-import { ZodError } from 'zod';
 import { Email } from './Email';
+import { ValidationError } from '../errors';
 
-describe('Email.create()', () => {
-  it('should throw a ZodError if email is invalid', () => {
+describe('Email', () => {
+  it('should throw a ValidationError if email is invalid', () => {
     const t = () => {
-      Email.create('not-an-email');
+      new Email('not-an-email');
     };
 
-    expect(t).toThrow(ZodError);
+    expect(t).toThrow(ValidationError);
   });
 
-  it('should throw a ZodError if email is too short', () => {
+  it('should throw a ValidationError if email is too short', () => {
     const t = () => {
-      Email.create('s@m.c');
+      new Email('s@m.c');
     };
 
-    expect(t).toThrow(ZodError);
+    expect(t).toThrow(ValidationError);
   });
 
   it('should return the Email object if email is valid', () => {
     const emailString = 'valid@email.com';
-    const email = Email.create(emailString);
+    const email = new Email(emailString);
 
     expect(email).toBeInstanceOf(Email);
     expect(email.toString()).toBe(emailString);
@@ -28,8 +28,8 @@ describe('Email.create()', () => {
 });
 
 describe('Email.equals()', () => {
-  const email1 = Email.create('email1@email.com');
-  const email2 = Email.create('email2@email.com');
+  const email1 = new Email('email1@email.com');
+  const email2 = new Email('email2@email.com');
 
   it('should return false if emails differ', () => {
     expect(email1.equals(email2)).toBe(false);

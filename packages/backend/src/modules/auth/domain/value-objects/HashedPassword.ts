@@ -1,12 +1,12 @@
-export class Id {
+export class HashedPassword {
   private readonly value: string;
 
   public constructor(value: string) {
     this.value = value;
   }
 
-  public equals(id: Id): boolean {
-    return this.value === id.value;
+  public equals(hashedPassword: HashedPassword): boolean {
+    return this.value === hashedPassword.value;
   }
 
   public toString(): string {

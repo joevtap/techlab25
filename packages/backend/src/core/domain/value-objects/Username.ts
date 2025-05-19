@@ -1,24 +1,35 @@
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
+import { ValidationError } from '../errors';
 
 export class Username {
-  private constructor(public readonly value: string) {}
+  private readonly value: string;
 
-  public static create(username: string): Username {
-    const usernameSchema = z
-      .string()
-      .min(3, 'Username is too small')
-      .max(255, 'Username is too big');
+  public constructor(value: string) {
+    try {
+      const schema = z
+        .string()
+        .min(3, 'Username is too small')
+        .max(255, 'Username is too big');
 
-    usernameSchema.parse(username);
+      schema.parse(value);
 
-    return new Username(username);
+      this.value = value;
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new ValidationError(
+          error.errors.map((e) => e.message).join(', '),
+        );
+      }
+
+      throw error;
+    }
   }
 
   public equals(username: Username): boolean {
     return this.value === username.value;
   }
 
-  toString(): string {
+  public toString(): string {
     return this.value;
   }
 }

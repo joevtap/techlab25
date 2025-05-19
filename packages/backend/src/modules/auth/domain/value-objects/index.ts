@@ -1,1 +1,1 @@
-export * from './PasswordHash';
+export * from './HashedPassword';
