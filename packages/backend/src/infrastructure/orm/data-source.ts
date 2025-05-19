@@ -3,7 +3,7 @@ import { UserEntity } from '../../modules/auth/infrastructure/orm/entities';
 import { User1747604528508 } from './migrations/1747604528508-User';
 import { User1747613470867 } from './migrations/1747613470867-User';
 
-export const ApplicationDataSource = new DataSource({
+export const applicationDataSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST,
   port: +process.env.DB_PORT!,

@@ -6,8 +6,9 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "scripts": {
+    "dev": "tsx --watch --env-file=\".env.development\" src/index.ts",
+    "build": "tsc",
     "start": "node .",
-    "dev": "tsx --watch --env-file=\".env.development\" index.ts",
     "format": "prettier . --write",
     "lint": "eslint .",
     "test": "jest",

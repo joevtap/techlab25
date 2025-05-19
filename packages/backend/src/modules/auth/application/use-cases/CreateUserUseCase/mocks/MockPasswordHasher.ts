@@ -1,4 +1,4 @@
-import { IPasswordHasher } from '../../../domain/services/IPasswordHasher';
+import { IPasswordHasher } from '../../../../domain/services/IPasswordHasher';
 
 export class MockPasswordHasher implements IPasswordHasher {
   async hash(plaintext: string): Promise<string> {

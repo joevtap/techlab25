@@ -2,7 +2,7 @@ import {
   MockUserRepository,
   MockIdGenerator,
   MockPasswordHasher,
-} from './__mocks__';
+} from './mocks';
 import { CreateUserUseCase } from './CreateUserUseCase';
 
 import { CreateUserDto } from '@techlab25/contracts/dtos/auth/CreateUserDto';

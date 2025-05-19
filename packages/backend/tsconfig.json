@@ -1,11 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "paths": {
-      "@core/*": ["./src/core/*"],
-      "@auth/*": ["./src/modules/auth/*"]
-    }
+    "rootDir": "./src",
+    "outDir": "./dist"
   },
   "references": [{ "path": "../contracts" }]
 }

@@ -1,10 +1,10 @@
-import { User } from '@auth/domain/entities/User';
-import { IUserRepository } from '@auth/domain/repositories/IUserRepository';
-import { Email, Id } from '@core/domain/value-objects';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../orm/entities';
 import { inject, injectable } from 'inversify';
-import { TypeOrmUserMapper } from '@auth/infrastructure/mappers/user/TypeOrmUserMapper';
+import { IUserRepository } from '../../domain/repositories/IUserRepository';
+import { Id, Email } from '../../../../core/domain/value-objects';
+import { User } from '../../domain/entities/User';
+import { TypeOrmUserMapper } from '../mappers/user/TypeOrmUserMapper';
 
 @injectable()
 export class TypeOrmUserRepository implements IUserRepository {

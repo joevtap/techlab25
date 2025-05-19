@@ -1,6 +1,6 @@
-import { BaseEntity } from '@core/domain/entities/Base';
-import { Email, Id, Username } from '@core/domain/value-objects';
-import { HashedPassword } from '../value-objects';
+import { BaseEntity } from '../../../../../core/domain/entities';
+import { Id, Username, Email } from '../../../../../core/domain/value-objects';
+import { HashedPassword } from '../../value-objects';
 
 type UserProps = {
   id: Id;

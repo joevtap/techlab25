@@ -1,6 +1,6 @@
-import { HashedPassword } from '../value-objects';
-import { User } from './User';
-import { Username, Email, Id } from '@core/domain/value-objects';
+import { Id, Username, Email } from '../../../../../core/domain/value-objects';
+import { HashedPassword } from '../../value-objects';
+import { User } from '.';
 
 describe('User', () => {
   it('should create a user with valid properties', () => {

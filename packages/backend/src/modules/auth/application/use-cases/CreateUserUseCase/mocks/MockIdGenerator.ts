@@ -1,4 +1,4 @@
-import { IIdGenerator } from '@core/domain/services/IIdGenerator';
+import { IIdGenerator } from '../../../../../../core/domain/services/IIdGenerator';
 
 export class MockIdGenerator implements IIdGenerator {
   private counter = 1;

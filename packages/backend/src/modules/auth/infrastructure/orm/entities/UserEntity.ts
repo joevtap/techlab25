@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UserEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'text' })
   id!: string;
 
   @Column({ unique: true, type: 'text' })
@@ -11,6 +11,6 @@ export class UserEntity {
   @Column({ type: 'text' })
   username!: string;
 
-  @Column({ name: 'password_hash' })
+  @Column({ name: 'password_hash', type: 'text' })
   hashedPassword!: string;
 }

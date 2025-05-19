@@ -1,7 +1,7 @@
-import { User } from '@auth/domain/entities/User';
-import { HashedPassword } from '@auth/domain/value-objects';
-import { UserEntity } from '@auth/infrastructure/orm/entities';
-import { Email, Id, Username } from '@core/domain/value-objects';
+import { Id, Email, Username } from '../../../../../core/domain/value-objects';
+import { User } from '../../../domain/entities/User';
+import { HashedPassword } from '../../../domain/value-objects';
+import { UserEntity } from '../../orm/entities';
 
 export class TypeOrmUserMapper {
   public static toDomain(input: UserEntity): User {

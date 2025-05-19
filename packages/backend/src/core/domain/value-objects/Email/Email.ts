@@ -1,5 +1,5 @@
 import { z, ZodError } from 'zod';
-import { ValidationError } from '../errors';
+import { ValidationError } from '../../errors';
 
 export class Email {
   private readonly value: string;

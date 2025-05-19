@@ -1,4 +1,4 @@
-import { Email, Id } from '@core/domain/value-objects';
+import { Id, Email } from '../../../../core/domain/value-objects';
 import { User } from '../entities/User';
 
 export interface IUserRepository {

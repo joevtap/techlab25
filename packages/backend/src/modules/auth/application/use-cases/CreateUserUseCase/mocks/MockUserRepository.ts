@@ -1,7 +1,11 @@
-import { IUserRepository } from '../../../domain/repositories/IUserRepository';
-import { User } from '../../../domain/entities/User';
-import { Email, Id, Username } from '@core/domain/value-objects';
-import { HashedPassword } from '../../../domain/value-objects';
+import { IUserRepository } from '../../../../domain/repositories/IUserRepository';
+import { User } from '../../../../domain/entities/User';
+import { HashedPassword } from '../../../../domain/value-objects';
+import {
+  Id,
+  Email,
+  Username,
+} from '../../../../../../core/domain/value-objects';
 
 export class MockUserRepository implements IUserRepository {
   public users: User[] = [];

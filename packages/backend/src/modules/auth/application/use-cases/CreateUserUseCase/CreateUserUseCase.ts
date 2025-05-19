@@ -1,16 +1,16 @@
 import { inject, injectable } from 'inversify';
-import { Result } from '@core/application/Result';
-import { User } from '../../domain/entities/User';
-import { Email, Username, Id } from '@core/domain/value-objects';
-import { HashedPassword } from '../../domain/value-objects';
-import {
-  ValidationError,
-  BusinessRuleViolationError,
-} from '@core/domain/errors';
-import { IUserRepository } from '@auth/domain/repositories/IUserRepository';
+import { User } from '../../../domain/entities/User';
+import { HashedPassword } from '../../../domain/value-objects';
 import { CreateUserDto } from '@techlab25/contracts/dtos/auth/CreateUserDto';
-import { IIdGenerator } from '@core/domain/services/IIdGenerator';
-import { IPasswordHasher } from '@auth/domain/services/IPasswordHasher';
+import { Result } from '../../../../../core/application/Result';
+import {
+  BusinessRuleViolationError,
+  ValidationError,
+} from '../../../../../core/domain/errors';
+import { IIdGenerator } from '../../../../../core/domain/services/IIdGenerator';
+import { Id, Email, Username } from '../../../../../core/domain/value-objects';
+import { IUserRepository } from '../../../domain/repositories/IUserRepository';
+import { IPasswordHasher } from '../../../domain/services/IPasswordHasher';
 
 type CreateUserOutput = {
   userId: string;
