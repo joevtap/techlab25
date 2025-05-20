@@ -1,9 +1,10 @@
-import { CreateUserDto } from '../../dtos/CreateUserDto';
 import {
-  MockUserRepository,
   MockIdGenerator,
   MockPasswordHasher,
-} from '../mocks';
+  MockUnitOfWork,
+  MockUserRepository,
+} from '../../../../../core/mocks';
+import { CreateUserDto } from '../../dtos/CreateUserDto';
 
 import { CreateUserUseCase } from './CreateUserUseCase';
 
@@ -12,16 +13,19 @@ describe('CreateUserUseCase', () => {
   let userRepository: MockUserRepository;
   let idGenerator: MockIdGenerator;
   let passwordHasher: MockPasswordHasher;
+  let unitOfWork: MockUnitOfWork;
 
   beforeEach(() => {
     userRepository = new MockUserRepository();
     idGenerator = new MockIdGenerator();
     passwordHasher = new MockPasswordHasher();
+    unitOfWork = new MockUnitOfWork();
 
     useCase = new CreateUserUseCase(
       userRepository,
       idGenerator,
       passwordHasher,
+      unitOfWork,
     );
   });
 
@@ -36,6 +40,7 @@ describe('CreateUserUseCase', () => {
 
     expect(result.isSuccess).toBe(true);
     expect(result.getValue().userId).toBe('test-id-1');
+    expect(unitOfWork.transactionExecuted).toBe(true);
 
     const savedUser = userRepository.users[0];
     expect(savedUser).toBeDefined();
@@ -63,5 +68,6 @@ describe('CreateUserUseCase', () => {
     expect(result.getError().message).toContain(
       'User with this email already exists',
     );
+    expect(unitOfWork.transactionExecuted).toBe(true);
   });
 });

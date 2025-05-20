@@ -1,7 +1,7 @@
-import { Id, Email, Username } from '../../../../../core/domain/value-objects';
-import { User } from '../../../domain/entities/User';
-import { IUserRepository } from '../../../domain/repositories/IUserRepository';
-import { HashedPassword } from '../../../domain/value-objects';
+import { User } from '../../modules/auth/domain/entities/User';
+import { IUserRepository } from '../../modules/auth/domain/repositories/IUserRepository';
+import { HashedPassword } from '../../modules/auth/domain/value-objects';
+import { Id, Email, Username } from '../domain/value-objects';
 
 export class MockUserRepository implements IUserRepository {
   public users: User[] = [];
@@ -17,14 +17,11 @@ export class MockUserRepository implements IUserRepository {
   }
 
   async save(user: User): Promise<void> {
-    // Check if user already exists (by ID)
     const existingUserIndex = this.users.findIndex((u) => u.id.equals(user.id));
 
     if (existingUserIndex >= 0) {
-      // Replace existing user
       this.users[existingUserIndex] = user;
     } else {
-      // Add new user
       this.users.push(user);
     }
   }
@@ -33,7 +30,6 @@ export class MockUserRepository implements IUserRepository {
     this.users = this.users.filter((u) => !u.id.equals(id));
   }
 
-  // Helper method for tests to add existing users more easily
   async addExistingUser(userData: {
     id?: string;
     email: string;
@@ -62,7 +58,6 @@ export class MockUserRepository implements IUserRepository {
     return user;
   }
 
-  // Clear all users (useful for test setup/teardown)
   clear(): void {
     this.users = [];
   }

@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { DataSource, EntityManager } from 'typeorm';
 
 import { Id, Email } from '../../../../core/domain/value-objects';
-import { RepositoryOptions } from '../../../../infrastructure/orm/RepositoryOptions';
+import { TransactionRegistry } from '../../../../infrastructure/orm/TypeOrmUnitOfWork';
 import { User } from '../../domain/entities/User';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import { TypeOrmUserMapper } from '../mappers/user/TypeOrmUserMapper';
@@ -15,15 +15,18 @@ export class TypeOrmUserRepository implements IUserRepository {
     private readonly dataSource: DataSource,
   ) {}
 
-  private getManager(options?: RepositoryOptions): EntityManager {
-    return options?.transactionManager ?? this.dataSource.manager;
+  private getManager(transactionId?: symbol): EntityManager {
+    if (transactionId) {
+      const transactionManager = TransactionRegistry.get(transactionId);
+      if (transactionManager) {
+        return transactionManager as EntityManager;
+      }
+    }
+    return this.dataSource.manager;
   }
 
-  public async findById(
-    id: Id,
-    options?: RepositoryOptions,
-  ): Promise<User | null> {
-    const manager = this.getManager(options);
+  public async findById(id: Id, transactionId?: symbol): Promise<User | null> {
+    const manager = this.getManager(transactionId);
 
     const user = await manager.findOneBy(UserEntity, {
       id: id.toString(),
@@ -38,9 +41,9 @@ export class TypeOrmUserRepository implements IUserRepository {
 
   public async findByEmail(
     email: Email,
-    options?: RepositoryOptions,
+    transactionId?: symbol,
   ): Promise<User | null> {
-    const manager = this.getManager(options);
+    const manager = this.getManager(transactionId);
 
     const user = await manager.findOneBy(UserEntity, {
       email: email.toString(),
@@ -53,8 +56,8 @@ export class TypeOrmUserRepository implements IUserRepository {
     return null;
   }
 
-  public async save(user: User, options?: RepositoryOptions): Promise<void> {
-    const manager = this.getManager(options);
+  public async save(user: User, transactionId?: symbol): Promise<void> {
+    const manager = this.getManager(transactionId);
 
     const userEntity = manager.create(
       UserEntity,

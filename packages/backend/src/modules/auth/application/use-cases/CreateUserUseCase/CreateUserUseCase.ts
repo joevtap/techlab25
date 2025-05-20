@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 
 import { Result } from '../../../../../core/application/Result';
+import { IUnitOfWork } from '../../../../../core/application/transactions/IUnitOfWork';
 import {
   BusinessRuleViolationError,
   ValidationError,
@@ -19,7 +20,7 @@ type CreateUserOutput = {
 
 @injectable()
 export class CreateUserUseCase {
-  constructor(
+  public constructor(
     @inject(Symbol.for('UserRepository'))
     private userRepository: IUserRepository,
 
@@ -28,34 +29,46 @@ export class CreateUserUseCase {
 
     @inject(Symbol.for('PasswordHasher'))
     private passwordHasher: IPasswordHasher,
+
+    @inject(Symbol.for('UnitOfWork'))
+    private unitOfWork: IUnitOfWork,
   ) {}
 
-  async execute(input: CreateUserDto): Promise<Result<CreateUserOutput>> {
+  public async execute(
+    input: CreateUserDto,
+  ): Promise<Result<CreateUserOutput>> {
     try {
-      const id = new Id(this.idGenerator.generate());
-      const email = new Email(input.email);
-      const username = new Username(input.username);
+      return await this.unitOfWork.runInTransaction(async (transactionId) => {
+        const id = new Id(this.idGenerator.generate());
+        const email = new Email(input.email);
+        const username = new Username(input.username);
 
-      const existingUserByEmail = await this.userRepository.findByEmail(email);
-      if (existingUserByEmail) {
-        return Result.fail(
-          new BusinessRuleViolationError('User with this email already exists'),
+        const existingUserByEmail = await this.userRepository.findByEmail(
+          email,
+          transactionId,
         );
-      }
+        if (existingUserByEmail) {
+          return Result.fail(
+            new BusinessRuleViolationError(
+              'User with this email already exists',
+            ),
+          );
+        }
 
-      const hash = await this.passwordHasher.hash(input.password);
-      const hashedPassword = new HashedPassword(hash);
+        const hash = await this.passwordHasher.hash(input.password);
+        const hashedPassword = new HashedPassword(hash);
 
-      const user = User.create({
-        id,
-        email,
-        username,
-        hashedPassword,
+        const user = User.create({
+          id,
+          email,
+          username,
+          hashedPassword,
+        });
+
+        await this.userRepository.save(user, transactionId);
+
+        return Result.ok<CreateUserOutput>({ userId: id.toString() });
       });
-
-      await this.userRepository.save(user);
-
-      return Result.ok<CreateUserOutput>({ userId: id.toString() });
     } catch (error) {
       if (error instanceof ValidationError) {
         return Result.fail(error);

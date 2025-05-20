@@ -1,4 +1,4 @@
-import { IPasswordHasher } from '../../../domain/services/IPasswordHasher';
+import { IPasswordHasher } from '../../modules/auth/domain/services/IPasswordHasher';
 
 export class MockPasswordHasher implements IPasswordHasher {
   private verifyResult: boolean = true;
