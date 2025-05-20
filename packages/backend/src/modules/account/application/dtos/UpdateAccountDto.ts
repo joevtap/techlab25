@@ -1,9 +1,7 @@
 import { AccountTypeEnum } from '../../domain/value-objects/AccountType';
 
-export type CreateAccountDto = {
-  accountNumber: string;
+export type UpdateAccountDto = {
+  id: string;
   type: AccountTypeEnum;
-  balance: number;
-  ownerId: string;
   requestingUserId: string;
 };

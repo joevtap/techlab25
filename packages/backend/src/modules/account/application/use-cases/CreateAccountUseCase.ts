@@ -14,29 +14,35 @@ import { IAccountRepository } from '../../domain/repositories/IAccountRepository
 import { AccountNumber } from '../../domain/value-objects/AccountNumber';
 import { AccountType } from '../../domain/value-objects/AccountType';
 import { Balance } from '../../domain/value-objects/Balance';
+import { AccountDto } from '../dtos/AccountDto';
 import { CreateAccountDto } from '../dtos/CreateAccountDto';
-import { CreateAccountOutputDto } from '../dtos/CreateAccountOutputDto';
 
 @injectable()
 export class CreateAccountUseCase {
   public constructor(
     @inject(Symbol.for('AccountRepository'))
-    private accountRepository: IAccountRepository,
+    private readonly accountRepository: IAccountRepository,
 
     @inject(Symbol.for('UserRepository'))
-    private userRepository: IUserRepository,
+    private readonly userRepository: IUserRepository,
 
     @inject(Symbol.for('IdGenerator'))
-    private idGenerator: IIdGenerator,
+    private readonly idGenerator: IIdGenerator,
 
     @inject(Symbol.for('UnitOfWork'))
-    private unitOfWork: IUnitOfWork,
+    private readonly unitOfWork: IUnitOfWork,
   ) {}
 
-  public async execute(
-    input: CreateAccountDto,
-  ): Promise<Result<CreateAccountOutputDto>> {
+  public async execute(input: CreateAccountDto): Promise<Result<AccountDto>> {
     try {
+      if (input.ownerId !== input.requestingUserId) {
+        return Result.fail(
+          new BusinessRuleViolationError(
+            'User cannot create account for another user',
+          ),
+        );
+      }
+
       return await this.unitOfWork.runInTransaction(async (transactionId) => {
         const id = new Id(this.idGenerator.generate());
         const accountNumber = new AccountNumber(input.accountNumber);
@@ -96,7 +102,7 @@ export class CreateAccountUseCase {
 
       return Result.fail(
         new Error(
-          `Failed to create user: ${error instanceof Error ? error.message : String(error)}`,
+          `Failed to create account: ${error instanceof Error ? error.message : String(error)}`,
         ),
       );
     }

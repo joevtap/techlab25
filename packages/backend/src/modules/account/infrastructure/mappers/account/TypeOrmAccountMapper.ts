@@ -16,13 +16,25 @@ export class TypeOrmAccountMapper {
     });
   }
 
-  public static toTypeOrm(input: Account): AccountEntity {
+  public static toTypeOrm(input: Account): Omit<AccountEntity, 'owner'> {
     return {
       id: input.id.toString(),
       accountNumber: input.accountNumber.toString(),
       type: input.type.toString(),
       balance: input.balance.getValue(),
       ownerId: input.ownerId.toString(),
+    };
+  }
+
+  public static toTypeOrmPartial(
+    input: Partial<Account>,
+  ): Partial<Omit<AccountEntity, 'owner'>> {
+    return {
+      id: input.id?.toString(),
+      accountNumber: input.accountNumber?.toString(),
+      type: input.type?.toString(),
+      balance: input.balance?.getValue(),
+      ownerId: input.ownerId?.toString(),
     };
   }
 }

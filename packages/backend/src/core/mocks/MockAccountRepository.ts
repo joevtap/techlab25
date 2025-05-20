@@ -17,7 +17,17 @@ export class MockAccountRepository implements IAccountRepository {
     const account = this.accounts.find((a) =>
       a.accountNumber.equals(accountNumber),
     );
-    return account || null;
+    return account ?? null;
+  }
+
+  public async findById(id: Id): Promise<Account | null> {
+    const account = this.accounts.find((a) => a.id.equals(id));
+    return account ?? null;
+  }
+
+  public async findAllByOwnerId(ownerId: Id): Promise<Account[] | null> {
+    const accounts = this.accounts.filter((a) => a.ownerId.equals(ownerId));
+    return accounts.length > 0 ? accounts : null;
   }
 
   public async save(account: Account): Promise<void> {
@@ -32,10 +42,16 @@ export class MockAccountRepository implements IAccountRepository {
     }
   }
 
-  public async delete(accountNumber: AccountNumber): Promise<void> {
-    this.accounts = this.accounts.filter(
-      (a) => !a.accountNumber.equals(accountNumber),
-    );
+  public async update(account: Account): Promise<void> {
+    const oldIndex = this.accounts.findIndex((a) => a.id.equals(account.id));
+
+    if (oldIndex > 0) {
+      this.accounts[oldIndex] = account;
+    }
+  }
+
+  public async delete(id: Id): Promise<void> {
+    this.accounts = this.accounts.filter((a) => !a.id.equals(id));
   }
 
   public async addExistingAccount(accountData: {

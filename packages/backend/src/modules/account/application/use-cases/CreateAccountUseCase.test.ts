@@ -1,3 +1,4 @@
+import { BusinessRuleViolationError } from '../../../../core/domain/errors';
 import {
   MockAccountRepository,
   MockIdGenerator,
@@ -35,6 +36,7 @@ describe('CreateAccountUseCase', () => {
       type: 'CHECKING',
       balance: 1000,
       ownerId: 'existing-user-id',
+      requestingUserId: 'existing-user-id',
     };
 
     await userRepository.addExistingUser({
@@ -67,6 +69,7 @@ describe('CreateAccountUseCase', () => {
       type: 'CHECKING',
       balance: 1000,
       ownerId: 'non-existing-user-id',
+      requestingUserId: 'non-existing-user-id',
     };
 
     const result = await useCase.execute(input);
@@ -83,6 +86,7 @@ describe('CreateAccountUseCase', () => {
       type: 'CHECKING',
       balance: 1000,
       ownerId: 'existing-user-id',
+      requestingUserId: 'existing-user-id',
     };
 
     await userRepository.addExistingUser({
@@ -107,5 +111,20 @@ describe('CreateAccountUseCase', () => {
     );
     expect(unitOfWork.transactionExecuted).toBe(true);
     expect(accountRepository.accounts.length).toBe(1);
+  });
+
+  it('should fail if user tries to create an account for another user', async () => {
+    const input: CreateAccountDto = {
+      accountNumber: '123456789',
+      type: 'CHECKING',
+      balance: 1000,
+      ownerId: 'existing-user-id',
+      requestingUserId: 'another-user-id',
+    };
+
+    const result = await useCase.execute(input);
+    expect(result.isSuccess).toBe(false);
+    expect(result.getError()).toBeInstanceOf(BusinessRuleViolationError);
+    expect(unitOfWork.transactionExecuted).toBe(false); // Ownership is checked before transaction
   });
 });

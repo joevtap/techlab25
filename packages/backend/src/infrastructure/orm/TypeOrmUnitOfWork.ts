@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { DataSource } from 'typeorm';
 
+import { Result } from '../../core/application/Result';
 import { IUnitOfWork } from '../../core/application/transactions/IUnitOfWork';
 
 @injectable()
@@ -23,6 +24,14 @@ export class TypeOrmUnitOfWork implements IUnitOfWork {
 
     try {
       const result = await callback(transactionId);
+
+      if (result instanceof Result) {
+        if (result.isFailure) {
+          await queryRunner.rollbackTransaction();
+          return result;
+        }
+      }
+
       await queryRunner.commitTransaction();
       return result;
     } catch (error) {

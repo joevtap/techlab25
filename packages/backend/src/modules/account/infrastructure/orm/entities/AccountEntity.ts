@@ -21,7 +21,10 @@ export class AccountEntity {
   @Column({ name: 'balance', type: 'integer' })
   balance!: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
-  @JoinColumn({ name: 'owner_id' })
+  @Column({ name: 'owner_id', type: 'text' })
   ownerId!: string;
+
+  @ManyToOne(() => UserEntity)
+  @JoinColumn({ name: 'owner_id' })
+  owner!: UserEntity;
 }
