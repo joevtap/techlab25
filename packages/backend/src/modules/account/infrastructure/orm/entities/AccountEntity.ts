@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 import { UserEntity } from '../../../../auth/infrastructure/orm/entities';
 import { AccountTypeEnum } from '../../../domain/value-objects/AccountType';
@@ -22,6 +22,6 @@ export class AccountEntity {
   balance!: number;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
-  @Column({ name: 'owner_id', type: 'text' })
+  @JoinColumn({ name: 'owner_id' })
   ownerId!: string;
 }

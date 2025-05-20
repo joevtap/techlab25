@@ -1,11 +1,7 @@
 import { Router } from 'express';
 import { Container } from 'inversify';
-import { DataSource } from 'typeorm';
 
 import { Module } from '../../core/application/Module';
-import { IIdGenerator } from '../../core/domain/services/IIdGenerator';
-import { applicationDataSource } from '../../infrastructure/orm/data-source';
-import { NanoIdGenerator } from '../../infrastructure/services/NanoIdGenerator';
 
 import { AuthController } from './api/controllers/Auth';
 import { CreateUserUseCase } from './application/use-cases/CreateUserUseCase';
@@ -22,18 +18,12 @@ export class AuthModule extends Module {
 
   public register(container: Container) {
     container
-      .bind<DataSource>(Symbol.for('TypeOrmDataSource'))
-      .toConstantValue(applicationDataSource);
-
-    container
       .bind<IUserRepository>(Symbol.for('UserRepository'))
       .to(TypeOrmUserRepository);
 
     container
       .bind<IPasswordHasher>(Symbol.for('PasswordHasher'))
       .to(BcryptPasswordHasher);
-
-    container.bind<IIdGenerator>(Symbol.for('IdGenerator')).to(NanoIdGenerator);
 
     container
       .bind<CreateUserUseCase>(Symbol.for('CreateUserUseCase'))

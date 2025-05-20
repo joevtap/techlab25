@@ -11,7 +11,7 @@ export class AccountType {
     return this.value === accountType.value;
   }
 
-  public toString(): string {
+  public toString(): AccountTypeEnum {
     return this.value;
   }
 }

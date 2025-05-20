@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import { AccountEntity } from '../../modules/account/infrastructure/orm/entities/AccountEntity';
 import { UserEntity } from '../../modules/auth/infrastructure/orm/entities';
 
-import { UsersAndAccounts1747752325673 } from './migrations/1747752325673-UsersAndAccounts';
+import { UsersAndAccounts1747753997203 } from './migrations/1747753997203-UsersAndAccounts';
 
 export const applicationDataSource = new DataSource({
   type: 'postgres',
@@ -13,5 +13,5 @@ export const applicationDataSource = new DataSource({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   entities: [UserEntity, AccountEntity],
-  migrations: [UsersAndAccounts1747752325673],
+  migrations: [UsersAndAccounts1747753997203],
 });
