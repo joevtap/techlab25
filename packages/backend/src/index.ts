@@ -2,6 +2,7 @@ import { exit } from 'process';
 import { container, initializeDiContainer, modules } from './di';
 import { applicationDataSource } from './infrastructure/orm/data-source';
 import express from 'express';
+import cors from 'cors';
 
 export async function main() {
   try {
@@ -13,6 +14,7 @@ export async function main() {
 
     const app = express();
 
+    app.use(cors({ origin: '*' }));
     app.use(express.json());
 
     modules.forEach((m) => {
