@@ -1,4 +1,4 @@
-type AccountTypeEnum = 'CHECKING' | 'SAVINGS' | 'INVESTMENTS';
+export type AccountTypeEnum = 'CHECKING' | 'SAVINGS' | 'INVESTMENTS';
 
 export class AccountType {
   private readonly value: AccountTypeEnum;

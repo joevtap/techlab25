@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
 
+import { AccountEntity } from '../../modules/account/infrastructure/orm/entities/AccountEntity';
 import { UserEntity } from '../../modules/auth/infrastructure/orm/entities';
 
-import { User1747604528508 } from './migrations/1747604528508-User';
-import { User1747613470867 } from './migrations/1747613470867-User';
+import { UsersAndAccounts1747752325673 } from './migrations/1747752325673-UsersAndAccounts';
 
 export const applicationDataSource = new DataSource({
   type: 'postgres',
@@ -12,6 +12,6 @@ export const applicationDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  entities: [UserEntity],
-  migrations: [User1747604528508, User1747613470867],
+  entities: [UserEntity, AccountEntity],
+  migrations: [UsersAndAccounts1747752325673],
 });
