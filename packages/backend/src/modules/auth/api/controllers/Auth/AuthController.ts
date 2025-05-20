@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { CreateUserUseCase } from '../../../application/use-cases/CreateUserUseCase';
 import { SignUserInUseCase } from '../../../application/use-cases/SignUserInUseCase/SignUserInUseCase';
 import { authenticate } from '../../middleware/authenticate';
-import { errorHandler } from '../../middleware/error';
 
 const createUserSchema = z.object({
   email: z.string().email(),
@@ -31,7 +30,6 @@ export class AuthController {
   ) {
     this.router = Router();
     this.bindRoutes();
-    this.router.use(errorHandler);
   }
 
   private bindRoutes() {

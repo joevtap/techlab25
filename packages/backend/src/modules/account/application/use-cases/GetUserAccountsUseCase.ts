@@ -11,10 +11,11 @@ export class GetUserAccountsUseCase {
     private readonly accountRepository: IAccountRepository,
   ) {}
 
-  public async execute(accountOwnerId: Id): Promise<Result<unknown>> {
+  public async execute(accountOwnerId: string): Promise<Result<unknown>> {
     try {
-      const accounts =
-        await this.accountRepository.findAllByOwnerId(accountOwnerId);
+      const id = new Id(accountOwnerId);
+
+      const accounts = await this.accountRepository.findAllByOwnerId(id);
 
       if (accounts) {
         return Result.ok(accounts);

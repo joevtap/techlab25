@@ -3,7 +3,9 @@ import { Container } from 'inversify';
 
 export interface IModule {
   register(container: Container): void;
-  routers(container: Container): Array<{ path: string; router: Router }>;
+  routers(
+    container: Container,
+  ): Array<{ path: string; router: Router; authRequired?: boolean }>;
 }
 
 export abstract class Module implements IModule {
@@ -12,5 +14,5 @@ export abstract class Module implements IModule {
   abstract register(container: Container): void;
   abstract routers(
     container: Container,
-  ): Array<{ path: string; router: Router }>;
+  ): Array<{ path: string; router: Router; authRequired?: boolean }>;
 }

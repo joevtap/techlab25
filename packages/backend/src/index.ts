@@ -3,8 +3,10 @@ import { exit } from 'process';
 import cors from 'cors';
 import express from 'express';
 
+import { errorHandler } from './core/api/middleware/error';
 import { container, initializeDiContainer, modules } from './di';
 import { applicationDataSource } from './infrastructure/orm/data-source';
+import { authenticate } from './modules/auth/api/middleware/authenticate';
 
 export async function main() {
   try {
@@ -22,10 +24,17 @@ export async function main() {
     modules.forEach((m) => {
       const base = m.name;
 
-      m.routers(container).forEach(({ path, router }) => {
+      m.routers(container).forEach(({ path, router, authRequired }) => {
+        if (authRequired) {
+          app.use(`/${base}${path && path}`, authenticate, router);
+          return;
+        }
+
         app.use(`/${base}${path && path}`, router);
       });
     });
+
+    app.use(errorHandler);
 
     app.listen(3000, () => {
       console.log('Server running on port 3000');

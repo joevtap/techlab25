@@ -45,7 +45,7 @@ export class AuthModule extends Module {
 
   public routers(
     container: Container,
-  ): Array<{ path: string; router: Router }> {
+  ): Array<{ path: string; router: Router; authRequired?: boolean }> {
     const authController = container.get<AuthController>(
       Symbol.for('AuthController'),
     );

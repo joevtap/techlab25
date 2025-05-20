@@ -6,7 +6,7 @@ import {
   NotFoundError,
   BusinessRuleViolationError,
   DomainError,
-} from '../../../../core/domain/errors';
+} from '../../domain/errors';
 
 export function errorHandler(
   err: Error,
