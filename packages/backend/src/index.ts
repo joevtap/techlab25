@@ -1,8 +1,10 @@
 import { exit } from 'process';
+
+import cors from 'cors';
+import express from 'express';
+
 import { container, initializeDiContainer, modules } from './di';
 import { applicationDataSource } from './infrastructure/orm/data-source';
-import express from 'express';
-import cors from 'cors';
 
 export async function main() {
   try {

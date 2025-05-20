@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
+import { ZodError } from 'zod';
+
 import {
   ValidationError,
   NotFoundError,
   BusinessRuleViolationError,
   DomainError,
 } from '../../../../core/domain/errors';
-import { ZodError } from 'zod';
 
 export function errorHandler(
   err: Error,

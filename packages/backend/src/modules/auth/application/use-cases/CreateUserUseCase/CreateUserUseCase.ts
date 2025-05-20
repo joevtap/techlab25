@@ -1,7 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { User } from '../../../domain/entities/User';
-import { HashedPassword } from '../../../domain/value-objects';
-import { CreateUserDto } from '../../dtos/CreateUserDto';
+
 import { Result } from '../../../../../core/application/Result';
 import {
   BusinessRuleViolationError,
@@ -9,8 +7,11 @@ import {
 } from '../../../../../core/domain/errors';
 import { IIdGenerator } from '../../../../../core/domain/services/IIdGenerator';
 import { Id, Email, Username } from '../../../../../core/domain/value-objects';
+import { User } from '../../../domain/entities/User';
 import { IUserRepository } from '../../../domain/repositories/IUserRepository';
 import { IPasswordHasher } from '../../../domain/services/IPasswordHasher';
+import { HashedPassword } from '../../../domain/value-objects';
+import { CreateUserDto } from '../../dtos/CreateUserDto';
 
 type CreateUserOutput = {
   userId: string;

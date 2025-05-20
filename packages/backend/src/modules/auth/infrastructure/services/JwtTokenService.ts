@@ -1,5 +1,6 @@
 import { injectable } from 'inversify';
 import { jwtVerify, SignJWT } from 'jose';
+
 import { ITokenService } from '../../domain/services/ITokenService';
 
 @injectable()

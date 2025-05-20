@@ -1,4 +1,5 @@
 import { z, ZodError } from 'zod';
+
 import { ValidationError } from '../../errors';
 
 export class Username {

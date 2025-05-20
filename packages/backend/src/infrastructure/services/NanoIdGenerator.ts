@@ -1,5 +1,6 @@
-import { nanoid } from 'nanoid';
 import { injectable } from 'inversify';
+import { nanoid } from 'nanoid';
+
 import { IIdGenerator } from '../../core/domain/services/IIdGenerator';
 
 @injectable()

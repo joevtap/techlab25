@@ -1,10 +1,11 @@
-import { inject, injectable } from 'inversify';
 import { Request, Response, NextFunction, Router } from 'express';
+import { inject, injectable } from 'inversify';
 import { z } from 'zod';
+
 import { CreateUserUseCase } from '../../../application/use-cases/CreateUserUseCase';
-import { errorHandler } from '../../middleware/error';
 import { SignUserInUseCase } from '../../../application/use-cases/SignUserInUseCase/SignUserInUseCase';
 import { authenticate } from '../../middleware/authenticate';
+import { errorHandler } from '../../middleware/error';
 
 const createUserSchema = z.object({
   email: z.string().email(),

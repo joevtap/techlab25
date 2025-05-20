@@ -1,6 +1,7 @@
-import { IPasswordHasher } from '../../domain/services/IPasswordHasher';
 import * as bcrypt from 'bcrypt';
 import { injectable } from 'inversify';
+
+import { IPasswordHasher } from '../../domain/services/IPasswordHasher';
 
 @injectable()
 export class BcryptPasswordHasher implements IPasswordHasher {

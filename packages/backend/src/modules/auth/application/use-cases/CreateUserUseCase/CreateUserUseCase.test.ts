@@ -1,10 +1,11 @@
+import { CreateUserDto } from '../../dtos/CreateUserDto';
 import {
   MockUserRepository,
   MockIdGenerator,
   MockPasswordHasher,
 } from '../mocks';
+
 import { CreateUserUseCase } from './CreateUserUseCase';
-import { CreateUserDto } from '../../dtos/CreateUserDto';
 
 describe('CreateUserUseCase', () => {
   let useCase: CreateUserUseCase;

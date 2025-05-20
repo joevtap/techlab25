@@ -1,20 +1,33 @@
-import { Repository } from 'typeorm';
-import { UserEntity } from '../orm/entities';
 import { inject, injectable } from 'inversify';
-import { IUserRepository } from '../../domain/repositories/IUserRepository';
+import { DataSource, EntityManager } from 'typeorm';
+
 import { Id, Email } from '../../../../core/domain/value-objects';
+import { RepositoryOptions } from '../../../../infrastructure/orm/RepositoryOptions';
 import { User } from '../../domain/entities/User';
+import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import { TypeOrmUserMapper } from '../mappers/user/TypeOrmUserMapper';
+import { UserEntity } from '../orm/entities';
 
 @injectable()
 export class TypeOrmUserRepository implements IUserRepository {
   public constructor(
-    @inject(Symbol.for('TypeOrmUserEntityRepository'))
-    private readonly repo: Repository<UserEntity>,
+    @inject(Symbol.for('TypeOrmDataSource'))
+    private readonly dataSource: DataSource,
   ) {}
 
-  public async findById(id: Id): Promise<User | null> {
-    const user = await this.repo.findOneBy({ id: id.toString() });
+  private getManager(options?: RepositoryOptions): EntityManager {
+    return options?.transactionManager ?? this.dataSource.manager;
+  }
+
+  public async findById(
+    id: Id,
+    options?: RepositoryOptions,
+  ): Promise<User | null> {
+    const manager = this.getManager(options);
+
+    const user = await manager.findOneBy(UserEntity, {
+      id: id.toString(),
+    });
 
     if (user) {
       return TypeOrmUserMapper.toDomain(user);
@@ -23,8 +36,15 @@ export class TypeOrmUserRepository implements IUserRepository {
     return null;
   }
 
-  public async findByEmail(email: Email): Promise<User | null> {
-    const user = await this.repo.findOneBy({ email: email.toString() });
+  public async findByEmail(
+    email: Email,
+    options?: RepositoryOptions,
+  ): Promise<User | null> {
+    const manager = this.getManager(options);
+
+    const user = await manager.findOneBy(UserEntity, {
+      email: email.toString(),
+    });
 
     if (user) {
       return TypeOrmUserMapper.toDomain(user);
@@ -33,9 +53,14 @@ export class TypeOrmUserRepository implements IUserRepository {
     return null;
   }
 
-  public async save(user: User): Promise<void> {
-    const userEntity = this.repo.create(TypeOrmUserMapper.toTypeOrm(user));
+  public async save(user: User, options?: RepositoryOptions): Promise<void> {
+    const manager = this.getManager(options);
 
-    await this.repo.save(userEntity);
+    const userEntity = manager.create(
+      UserEntity,
+      TypeOrmUserMapper.toTypeOrm(user),
+    );
+
+    await manager.save(userEntity);
   }
 }

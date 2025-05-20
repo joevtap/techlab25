@@ -1,5 +1,7 @@
 import { DataSource } from 'typeorm';
+
 import { UserEntity } from '../../modules/auth/infrastructure/orm/entities';
+
 import { User1747604528508 } from './migrations/1747604528508-User';
 import { User1747613470867 } from './migrations/1747613470867-User';
 

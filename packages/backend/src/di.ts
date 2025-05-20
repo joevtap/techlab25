@@ -1,4 +1,5 @@
 import { Container } from 'inversify';
+
 import { Module } from './core/application/Module';
 import { AuthModule } from './modules/auth/AuthModule';
 

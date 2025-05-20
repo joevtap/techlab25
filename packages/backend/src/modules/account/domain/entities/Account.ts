@@ -1,11 +1,11 @@
 import { BaseEntity } from '../../../../core/domain/entities';
+import { ValidationError } from '../../../../core/domain/errors';
+import { Id } from '../../../../core/domain/value-objects/Id';
+import { InsufficientFundsError } from '../errors/InsufficientFundsError';
 import { AccountNumber } from '../value-objects/AccountNumber';
 import { AccountType } from '../value-objects/AccountType';
 import { Balance } from '../value-objects/Balance';
-import { Id } from '../../../../core/domain/value-objects/Id';
 import { Currency } from '../value-objects/Currency';
-import { ValidationError } from '../../../../core/domain/errors';
-import { InsufficientFundsError } from '../errors/InsufficientFundsError';
 
 type AccountProps = {
   id: Id;

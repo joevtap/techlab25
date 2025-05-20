@@ -1,16 +1,17 @@
-import { SignUserInUseCase } from './SignUserInUseCase';
-import { UserSignInDto } from '../../dtos/UserSignInDto';
+import { ValidationError } from '../../../../../core/domain/errors';
 import { Email } from '../../../../../core/domain/value-objects';
+import { Id, Username } from '../../../../../core/domain/value-objects';
+import { User } from '../../../domain/entities/User';
 import { InvalidCredentialsError } from '../../../domain/errors';
+import { HashedPassword } from '../../../domain/value-objects';
+import { UserSignInDto } from '../../dtos/UserSignInDto';
 import {
   MockUserRepository,
   MockPasswordHasher,
   MockTokenService,
 } from '../mocks';
-import { User } from '../../../domain/entities/User';
-import { HashedPassword } from '../../../domain/value-objects';
-import { Id, Username } from '../../../../../core/domain/value-objects';
-import { ValidationError } from '../../../../../core/domain/errors';
+
+import { SignUserInUseCase } from './SignUserInUseCase';
 
 describe('SignUserInUseCase', () => {
   let useCase: SignUserInUseCase;

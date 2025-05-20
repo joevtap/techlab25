@@ -1,5 +1,6 @@
 import { Id, Username, Email } from '../../../../../core/domain/value-objects';
 import { HashedPassword } from '../../value-objects';
+
 import { User } from '.';
 
 describe('User', () => {

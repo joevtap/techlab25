@@ -10,7 +10,7 @@
     "build": "tsc",
     "start": "node .",
     "format": "prettier . --write",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "typeorm": "export $(cat .env.development | xargs) && typeorm-ts-node-commonjs"
@@ -35,6 +35,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.18",
     "eslint": "^9.27.0",
+    "eslint-plugin-import": "^2.31.0",
     "globals": "^16.1.0",
     "jest": "^29.7.0",
     "prettier": "3.5.3",

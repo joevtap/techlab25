@@ -1,5 +1,6 @@
-import { Email } from './Email';
 import { ValidationError } from '../../errors';
+
+import { Email } from './Email';
 
 describe('Email', () => {
   it('should throw a ValidationError if email is invalid', () => {

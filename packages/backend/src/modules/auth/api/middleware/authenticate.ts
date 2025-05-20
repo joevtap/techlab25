@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+
 import { container } from '../../../../di';
 import { ITokenService } from '../../domain/services/ITokenService';
 

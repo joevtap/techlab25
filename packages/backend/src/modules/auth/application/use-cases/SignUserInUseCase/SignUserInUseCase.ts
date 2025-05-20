@@ -1,16 +1,17 @@
 import { inject, injectable } from 'inversify';
-import { UserSignInDto } from '../../dtos/UserSignInDto';
+
 import { Result } from '../../../../../core/application/Result';
-import { IUserRepository } from '../../../domain/repositories/IUserRepository';
-import { IPasswordHasher } from '../../../domain/services/IPasswordHasher';
-import { ITokenService } from '../../../domain/services/ITokenService';
-import { Email } from '../../../../../core/domain/value-objects';
-import { InvalidCredentialsError } from '../../../domain/errors';
-import { AuthenticationError } from '../../../domain/errors/AuthenticationError';
 import {
   ValidationError,
   BusinessRuleViolationError,
 } from '../../../../../core/domain/errors';
+import { Email } from '../../../../../core/domain/value-objects';
+import { InvalidCredentialsError } from '../../../domain/errors';
+import { AuthenticationError } from '../../../domain/errors/AuthenticationError';
+import { IUserRepository } from '../../../domain/repositories/IUserRepository';
+import { IPasswordHasher } from '../../../domain/services/IPasswordHasher';
+import { ITokenService } from '../../../domain/services/ITokenService';
+import { UserSignInDto } from '../../dtos/UserSignInDto';
 
 @injectable()
 export class SignUserInUseCase {
