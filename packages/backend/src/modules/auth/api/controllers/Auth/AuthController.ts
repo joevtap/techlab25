@@ -1,21 +1,11 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { z } from 'zod';
 
 import { CreateUserUseCase } from '../../../application/use-cases/CreateUserUseCase';
 import { SignUserInUseCase } from '../../../application/use-cases/SignUserInUseCase/SignUserInUseCase';
 import { authenticate } from '../../middleware/authenticate';
-
-const createUserSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  username: z.string().min(3),
-});
-
-const signInSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
+import { CreateUserValidator } from '../../validators/CreateUserValidator';
+import { UserSignInValidator } from '../../validators/UserSignInValidator';
 
 @injectable()
 export class AuthController {
@@ -45,12 +35,12 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const validatedData = createUserSchema.parse(req.body);
+      const validatedBody = CreateUserValidator.validate(req.body);
 
       const result = await this.createUserUseCase.execute({
-        email: validatedData.email,
-        password: validatedData.password,
-        username: validatedData.username,
+        email: validatedBody.email,
+        password: validatedBody.password,
+        username: validatedBody.username,
       });
 
       if (result.isFailure) {
@@ -75,9 +65,9 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const validatedData = signInSchema.parse(req.body);
+      const validatedBody = UserSignInValidator.validate(req.body);
 
-      const result = await this.signUserInUseCase.execute(validatedData);
+      const result = await this.signUserInUseCase.execute(validatedBody);
 
       if (result.isFailure) {
         next(result.getError());

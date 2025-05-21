@@ -1,22 +1,14 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { nanoid } from 'nanoid';
-import { z } from 'zod';
 
 import { NotFoundError } from '../../../../../core/domain/errors';
 import { CreateAccountUseCase } from '../../../application/use-cases/CreateAccountUseCase';
 import { DeleteAccountUseCase } from '../../../application/use-cases/DeleteAccountUseCase';
 import { GetUserAccountsUseCase } from '../../../application/use-cases/GetUserAccountsUseCase';
 import { UpdateAccountUseCase } from '../../../application/use-cases/UpdateAccountUseCase';
-
-const createAccountSchema = z.object({
-  type: z.enum(['CHECKING', 'SAVINGS', 'INVESTMENTS']),
-  balance: z.number().int().optional(),
-});
-
-const updateAccountSchema = z.object({
-  type: z.enum(['CHECKING', 'SAVINGS', 'INVESTMENTS']),
-});
+import { CreateAccountValidator } from '../../validators/CreateAccountValidator';
+import { UpdateAccountValidator } from '../../validators/UpdateAccountValidator';
 
 @injectable()
 export class AccountController {
@@ -83,7 +75,7 @@ export class AccountController {
     try {
       const userId = req.user?.id as string;
 
-      const validatedBody = createAccountSchema.parse(req.body);
+      const validatedBody = CreateAccountValidator.validate(req.body);
 
       const result = await this.createAccountUseCase.execute({
         accountNumber: nanoid(8),
@@ -120,7 +112,7 @@ export class AccountController {
         throw new NotFoundError('Account', accountId ?? 'NULL');
       }
 
-      const validatedBody = updateAccountSchema.parse(req.body);
+      const validatedBody = UpdateAccountValidator.validate(req.body);
 
       const result = await this.updateAccountUseCase.execute({
         id: accountId,

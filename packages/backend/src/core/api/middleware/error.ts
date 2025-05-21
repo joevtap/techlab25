@@ -15,8 +15,6 @@ export function errorHandler(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
 ) {
-  console.error(`Error processing request: ${err.message}`);
-
   if (err instanceof ValidationError) {
     res.status(400).json({
       type: 'ValidationError',
