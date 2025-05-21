@@ -26,11 +26,11 @@ export async function main() {
 
       m.routers(container).forEach(({ path, router, authRequired }) => {
         if (authRequired) {
-          app.use(`/${base}${path && path}`, authenticate, router);
+          app.use(`/${base}${path}`, authenticate, router);
           return;
         }
 
-        app.use(`/${base}${path && path}`, router);
+        app.use(`/${base}${path}`, router);
       });
     });
 
