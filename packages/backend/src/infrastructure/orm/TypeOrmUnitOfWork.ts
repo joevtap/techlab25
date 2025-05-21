@@ -16,7 +16,7 @@ export class TypeOrmUnitOfWork implements IUnitOfWork {
   ): Promise<T> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
-    await queryRunner.startTransaction();
+    await queryRunner.startTransaction('SERIALIZABLE');
 
     const transactionId = Symbol('transaction');
 
