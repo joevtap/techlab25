@@ -14,7 +14,7 @@ export class TransactionDate {
   }
 
   public toTimestamp(): number {
-    return this.value.getUTCMilliseconds();
+    return this.value.getTime();
   }
 
   public toString(): string {

@@ -9,10 +9,15 @@ import { TypeOrmUnitOfWork } from './infrastructure/orm/TypeOrmUnitOfWork';
 import { NanoIdGenerator } from './infrastructure/services/NanoIdGenerator';
 import { AccountModule } from './modules/account/AccountModule';
 import { AuthModule } from './modules/auth/AuthModule';
+import { TransactionModule } from './modules/transactions/TransactionModule';
 
 const container = new Container({ defaultScope: 'Request' });
 
-const modules: Module[] = [new AuthModule(), new AccountModule()];
+const modules: Module[] = [
+  new AuthModule(),
+  new AccountModule(),
+  new TransactionModule(),
+];
 
 export async function initializeDiContainer() {
   container

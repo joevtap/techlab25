@@ -1,7 +1,7 @@
 export class Description {
-  private readonly value: string;
+  private readonly value?: string;
 
-  public constructor(value: string) {
+  public constructor(value?: string) {
     this.value = value;
   }
 
@@ -9,7 +9,7 @@ export class Description {
     return this.value === description.value;
   }
 
-  public toString(): string {
+  public toString(): string | undefined {
     return this.value;
   }
 }

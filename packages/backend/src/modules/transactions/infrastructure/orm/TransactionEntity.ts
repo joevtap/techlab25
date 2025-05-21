@@ -15,17 +15,17 @@ export class TransactionEntity {
 
   @ManyToOne(() => AccountEntity)
   @JoinColumn({ name: 'from_id', referencedColumnName: 'id' })
-  from!: AccountEntity;
+  from?: AccountEntity;
 
   @Column({ name: 'from_id', type: 'text', nullable: true })
-  fromId!: string;
+  fromId?: string;
 
   @ManyToOne(() => AccountEntity)
   @JoinColumn({ name: 'to_id', referencedColumnName: 'id' })
-  to!: AccountEntity;
+  to?: AccountEntity;
 
   @Column({ name: 'to_id', type: 'text', nullable: true })
-  toId!: string;
+  toId?: string;
 
   @Column({ type: 'integer' })
   value!: number;
