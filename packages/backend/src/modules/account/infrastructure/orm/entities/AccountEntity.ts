@@ -25,6 +25,6 @@ export class AccountEntity {
   ownerId!: string;
 
   @ManyToOne(() => UserEntity)
-  @JoinColumn({ name: 'owner_id' })
+  @JoinColumn({ name: 'owner_id', referencedColumnName: 'id' })
   owner!: UserEntity;
 }
