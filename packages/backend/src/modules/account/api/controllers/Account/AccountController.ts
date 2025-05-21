@@ -52,10 +52,12 @@ export class AccountController {
 
         const accounts = result.getValue();
 
-        res.status(200).json({
-          accounts,
-        });
+        if (accounts.accounts.length === 0) {
+          res.status(204).json(accounts);
+          return;
+        }
 
+        res.status(200).json(accounts);
         return;
       }
     } catch (error) {
