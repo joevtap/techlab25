@@ -24,8 +24,8 @@ export async function initializeDiContainer() {
   container.bind<IUnitOfWork>(Symbol.for('UnitOfWork')).to(TypeOrmUnitOfWork);
 
   modules.forEach((m) => {
-    console.log('Registering module:', m.name);
     m.register(container);
+    console.log(`Module ${m.name} registered to DI container`);
   });
 }
 

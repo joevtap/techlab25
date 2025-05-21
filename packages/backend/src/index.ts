@@ -2,6 +2,8 @@ import { exit } from 'process';
 
 import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
 import { errorHandler } from './core/api/middleware/error';
 import { container, initializeDiContainer, modules } from './di';
@@ -19,6 +21,8 @@ export async function main() {
     const app = express();
 
     app.use(cors({ origin: '*' }));
+    app.use(helmet());
+    app.use(morgan('tiny'));
     app.use(express.json());
 
     modules.forEach((m) => {
@@ -36,8 +40,9 @@ export async function main() {
 
     app.use(errorHandler);
 
-    app.listen(3000, () => {
-      console.log('Server running on port 3000');
+    const port = process.env.APP_PORT ?? 8080;
+    app.listen(port, () => {
+      console.log(`Server listening on port :${port}`);
     });
   } catch (error) {
     console.error('Failed to start application:', error);
