@@ -1,5 +1,6 @@
 import { Id } from '../../../../core/domain/value-objects';
 import { Transaction } from '../../domain/entities/Transaction';
+import { AccountNumber } from '../../domain/value-objects/AccountNumber';
 import { Description } from '../../domain/value-objects/Description';
 import { TransactionDate } from '../../domain/value-objects/TransactionDate';
 import { TransactionValue } from '../../domain/value-objects/TransactionValue';
@@ -11,6 +12,7 @@ export class TypeOrmTransactionMapper {
       return Transaction.debit({
         id: new Id(input.id),
         fromId: new Id(input.fromId!),
+        fromAccountNumber: new AccountNumber(input.from!.accountNumber),
         value: new TransactionValue(input.value),
         description: new Description(input.description),
         createdAt: new TransactionDate(input.createdAt),
@@ -21,6 +23,7 @@ export class TypeOrmTransactionMapper {
       return Transaction.credit({
         id: new Id(input.id),
         toId: new Id(input.toId!),
+        toAccountNumber: new AccountNumber(input.to!.accountNumber),
         value: new TransactionValue(input.value),
         description: new Description(input.description),
         createdAt: new TransactionDate(input.createdAt),
@@ -30,7 +33,9 @@ export class TypeOrmTransactionMapper {
     return Transaction.transfer({
       id: new Id(input.id),
       fromId: new Id(input.fromId!),
+      fromAccountNumber: new AccountNumber(input.from!.accountNumber),
       toId: new Id(input.toId!),
+      toAccountNumber: new AccountNumber(input.to!.accountNumber),
       value: new TransactionValue(input.value),
       description: new Description(input.description),
       createdAt: new TransactionDate(input.createdAt),

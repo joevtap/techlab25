@@ -10,9 +10,9 @@ import { IAccountRepository } from '../../../account/domain/repositories/IAccoun
 import { Transaction } from '../../domain/entities/Transaction';
 import { ITransactionRepository } from '../../domain/repositories/ITransactionRepository';
 import { TransactionDate } from '../../domain/value-objects/TransactionDate';
+import { TransactionMapper } from '../../infrastructure/mappers/TransactionMapper';
 import { ListTransactionsByAccountDto } from '../dtos/ListTransactionsByAccountDto';
 import { ListTransactionsResponseDto } from '../dtos/TransactionDto';
-import { TransactionMapper } from '../mappers/TransactionMapper';
 
 @injectable()
 export class ListTransactionsByAccountUseCase {

@@ -48,6 +48,10 @@ export class TypeOrmTransactionRepository implements ITransactionRepository {
 
     const transactions = await manager.find(TransactionEntity, {
       where: [{ fromId: id.toString() }, { toId: id.toString() }],
+      relations: {
+        from: true,
+        to: true,
+      },
     });
 
     return transactions.map(TypeOrmTransactionMapper.toDomain);
@@ -69,6 +73,10 @@ export class TypeOrmTransactionRepository implements ITransactionRepository {
           createdAt: Between(from.getValue(), to.getValue()),
         },
       ],
+      relations: {
+        from: true,
+        to: true,
+      },
     });
 
     return transactions.map(TypeOrmTransactionMapper.toDomain);
