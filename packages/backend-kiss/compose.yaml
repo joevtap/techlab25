@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:17.5-alpine3.21
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: techlab
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev1234

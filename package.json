@@ -24,6 +24,7 @@
   },
   "workspaces": [
     "packages/frontend",
-    "packages/backend"
+    "packages/backend",
+    "packages/backend-kiss"
   ]
 }
