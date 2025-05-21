@@ -1,7 +1,11 @@
 import { inject, injectable } from 'inversify';
 
 import { Result } from '../../../../core/application/Result';
-import { BusinessRuleViolationError } from '../../../../core/domain/errors';
+import { IUnitOfWork } from '../../../../core/application/transactions/IUnitOfWork';
+import {
+  BusinessRuleViolationError,
+  NotFoundError,
+} from '../../../../core/domain/errors';
 import { Id } from '../../../../core/domain/value-objects';
 import { IAccountRepository } from '../../domain/repositories/IAccountRepository';
 import { DeleteAccountDto } from '../dtos/DeleteAccountDto';
@@ -11,24 +15,40 @@ export class DeleteAccountUseCase {
   public constructor(
     @inject(Symbol.for('AccountRepository'))
     private readonly accountRepository: IAccountRepository,
+
+    @inject(Symbol.for('UnitOfWork'))
+    private readonly unitOfWork: IUnitOfWork,
   ) {}
 
   public async execute(input: DeleteAccountDto): Promise<Result<void>> {
     try {
-      const accountId = new Id(input.accountId);
-      const requestingUserId = new Id(input.requestingUserId);
+      return await this.unitOfWork.runInTransaction(async (transactionId) => {
+        const accountId = new Id(input.accountId);
+        const requestingUserId = new Id(input.requestingUserId);
 
-      if (!requestingUserId.equals(accountId)) {
-        return Result.fail(
-          new BusinessRuleViolationError(
-            'User cannot delete an account they do not own',
-          ),
+        const account = await this.accountRepository.findById(
+          accountId,
+          transactionId,
         );
-      }
 
-      await this.accountRepository.delete(accountId);
+        if (!account) {
+          return Result.fail(
+            new NotFoundError('Account', accountId.toString()),
+          );
+        }
 
-      return Result.ok();
+        if (!account.ownerId.equals(requestingUserId)) {
+          return Result.fail(
+            new BusinessRuleViolationError(
+              'Requesting user does not own the account',
+            ),
+          );
+        }
+
+        await this.accountRepository.delete(accountId, transactionId);
+
+        return Result.ok();
+      });
     } catch (error) {
       return Result.fail(
         new Error(

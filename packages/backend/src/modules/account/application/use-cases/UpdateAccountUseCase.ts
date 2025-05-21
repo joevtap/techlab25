@@ -45,10 +45,13 @@ export class UpdateAccountUseCase {
           );
         }
 
-        await this.accountRepository.update({
-          id,
-          type,
-        });
+        await this.accountRepository.update(
+          {
+            id,
+            type,
+          },
+          transactionId,
+        );
 
         return Result.ok();
       });
