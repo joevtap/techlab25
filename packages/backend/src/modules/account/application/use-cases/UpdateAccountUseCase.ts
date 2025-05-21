@@ -34,7 +34,7 @@ export class UpdateAccountUseCase {
         );
 
         if (!account) {
-          return Result.fail(new NotFoundError('Account does not exist'));
+          return Result.fail(new NotFoundError('Account', id.toString()));
         }
 
         if (!account.ownerId.equals(requestingUserId)) {

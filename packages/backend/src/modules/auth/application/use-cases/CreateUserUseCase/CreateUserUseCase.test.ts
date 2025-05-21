@@ -4,6 +4,7 @@ import {
   MockUnitOfWork,
   MockUserRepository,
 } from '../../../../../core/mocks';
+import { UserAlreadyExistsError } from '../../../domain/errors/UserAlreadyExistsError';
 import { CreateUserDto } from '../../dtos/CreateUserDto';
 
 import { CreateUserUseCase } from './CreateUserUseCase';
@@ -65,9 +66,7 @@ describe('CreateUserUseCase', () => {
     const result = await useCase.execute(input);
 
     expect(result.isSuccess).toBe(false);
-    expect(result.getError().message).toContain(
-      'User with this email already exists',
-    );
+    expect(result.getError()).toBeInstanceOf(UserAlreadyExistsError);
     expect(unitOfWork.transactionExecuted).toBe(true);
   });
 });

@@ -9,6 +9,7 @@ import {
 import { IIdGenerator } from '../../../../../core/domain/services/IIdGenerator';
 import { Id, Email, Username } from '../../../../../core/domain/value-objects';
 import { User } from '../../../domain/entities/User';
+import { UserAlreadyExistsError } from '../../../domain/errors/UserAlreadyExistsError';
 import { IUserRepository } from '../../../domain/repositories/IUserRepository';
 import { IPasswordHasher } from '../../../domain/services/IPasswordHasher';
 import { HashedPassword } from '../../../domain/value-objects';
@@ -48,11 +49,7 @@ export class CreateUserUseCase {
           transactionId,
         );
         if (existingUserByEmail) {
-          return Result.fail(
-            new BusinessRuleViolationError(
-              'User with this email already exists',
-            ),
-          );
+          return Result.fail(new UserAlreadyExistsError(email.toString()));
         }
 
         const hash = await this.passwordHasher.hash(input.password);

@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 
+import { InvalidCredentialsError } from '../../../modules/auth/domain/errors';
+import { UserAlreadyExistsError } from '../../../modules/auth/domain/errors/UserAlreadyExistsError';
 import {
   ValidationError,
   NotFoundError,
@@ -18,6 +20,22 @@ export function errorHandler(
   if (err instanceof ValidationError) {
     res.status(400).json({
       type: 'ValidationError',
+      message: err.message,
+    });
+    return;
+  }
+
+  if (err instanceof InvalidCredentialsError) {
+    res.status(401).json({
+      type: 'InvalidCredentialsError',
+      message: err.message,
+    });
+    return;
+  }
+
+  if (err instanceof UserAlreadyExistsError) {
+    res.status(409).json({
+      type: 'UserAlreadyExistsError',
       message: err.message,
     });
     return;

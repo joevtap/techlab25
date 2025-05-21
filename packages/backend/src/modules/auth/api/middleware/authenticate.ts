@@ -33,6 +33,7 @@ export const authenticate = async (
         type: 'AuthenticationError',
         message: 'Invalid token',
       });
+      return;
     }
   } catch (error) {
     next(error);
