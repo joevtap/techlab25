@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { IAccountRepository } from '../repositories/IAccountRepository';
 import { IUnitOfWork } from '../repositories/IUnitOfWork';
 import { IUserRepository } from '../repositories/IUserRepository';
+import { AccountService } from '../services/AccountService';
 import { IIdGenerator } from '../services/IIdGenerator';
 import { IPasswordHasher } from '../services/IPasswordHasher';
 import { ITokenService } from '../services/ITokenService';
@@ -51,5 +52,9 @@ export class IoC {
     this.container
       .bind<IAccountRepository>(TOKENS.ACCOUNT_REPOSITORY)
       .to(AccountRepository);
+
+    this.container
+      .bind<AccountService>(TOKENS.ACCOUNT_SERVICE)
+      .to(AccountService);
   }
 }

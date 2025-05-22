@@ -1,8 +1,13 @@
 import { inject, injectable } from 'inversify';
 
+import {
+  CreateUserRequest,
+  CreateUserResponse,
+  SignUserInRequest,
+  SignUserInResponse,
+} from '../dtos';
 import { Token } from '../entities/types';
 import { User } from '../entities/User';
-import { AuthenticationError } from '../errors/AuthenticationError';
 import { InvalidCredentialsError } from '../errors/InvalidCredentialsError';
 import { UserAlreadyExistsError } from '../errors/UserAlreadyExistsError';
 import { TOKENS } from '../infrastructure/Tokens';
@@ -21,15 +26,11 @@ export class UserService {
     @inject(TOKENS.PASSWORD_HASHER) private passwordHasher: IPasswordHasher,
   ) {}
 
-  public async createUser(user: Omit<User, 'id'>) {
-    try {
-      await this.uow.start();
-
-      const userExists = await this.uow.userRepository.findByEmail(user.email);
-
-      if (userExists) {
-        throw new UserAlreadyExistsError(user.email);
-      }
+  public async createUser(
+    user: CreateUserRequest,
+  ): Promise<CreateUserResponse> {
+    return this.executeWithTransaction(async () => {
+      await this.validateEmailNotInUse(user.email);
 
       const userId = this.idGenerator.generate();
       const hashedPassword = await this.passwordHasher.hash(user.password);
@@ -43,35 +44,16 @@ export class UserService {
 
       await this.uow.userRepository.add(newUser);
 
-      await this.uow.commit();
-    } catch (error) {
-      await this.uow.rollback();
-      throw error;
-    }
+      return { id: userId, email: user.email, username: user.username };
+    });
   }
 
-  public async signUserIn(user: Omit<User, 'id' | 'username'>): Promise<Token> {
-    try {
-      await this.uow.start();
-
-      const existingUser = await this.uow.userRepository.findByEmail(
-        user.email,
-      );
-
-      if (!existingUser) {
-        throw new InvalidCredentialsError();
-      }
-
-      const passwordIsValid = await this.passwordHasher.verify(
-        user.password,
-        existingUser.password,
-      );
-
-      if (!passwordIsValid) {
-        throw new InvalidCredentialsError();
-      }
-
-      await this.uow.commit();
+  public async signUserIn(
+    user: SignUserInRequest,
+  ): Promise<SignUserInResponse> {
+    return await this.executeWithTransaction(async () => {
+      const existingUser = await this.findUserByEmailOrFail(user.email);
+      await this.validatePassword(user.password, existingUser.password);
 
       const token: Token = await this.tokenService.generateToken({
         id: existingUser.id,
@@ -79,13 +61,50 @@ export class UserService {
         username: existingUser.username,
       });
 
-      return token;
+      return { token };
+    });
+  }
+
+  private async executeWithTransaction<T>(
+    operation: () => Promise<T>,
+  ): Promise<T> {
+    try {
+      await this.uow.start();
+      const result = await operation();
+      await this.uow.commit();
+      return result;
     } catch (error) {
       await this.uow.rollback();
+      throw error;
+    }
+  }
 
-      throw new AuthenticationError(
-        `Authentication failed: ${error instanceof Error ? error.message : String(error)}`,
-      );
+  private async validateEmailNotInUse(email: string): Promise<void> {
+    const userExists = await this.uow.userRepository.findByEmail(email);
+    if (userExists) {
+      throw new UserAlreadyExistsError(email);
+    }
+  }
+
+  private async findUserByEmailOrFail(email: string): Promise<User> {
+    const existingUser = await this.uow.userRepository.findByEmail(email);
+    if (!existingUser) {
+      throw new InvalidCredentialsError();
+    }
+    return existingUser;
+  }
+
+  private async validatePassword(
+    providedPassword: string,
+    storedPassword: string,
+  ): Promise<void> {
+    const passwordIsValid = await this.passwordHasher.verify(
+      providedPassword,
+      storedPassword,
+    );
+
+    if (!passwordIsValid) {
+      throw new InvalidCredentialsError();
     }
   }
 }

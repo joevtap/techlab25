@@ -5,7 +5,7 @@ import { IIdGenerator } from '../../services/IIdGenerator';
 
 @injectable()
 export class NanoIdGenerator implements IIdGenerator {
-  generate(): string {
-    return nanoid();
+  generate(capSize?: number): string {
+    return nanoid(capSize);
   }
 }
