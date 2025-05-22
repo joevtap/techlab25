@@ -6,6 +6,7 @@ import {
   TransactionPersistenceEntity,
 } from './entities';
 import { InitDb1747919198591 } from './migrations/1747919198591-InitDb';
+import { ChangeDateToDatetime1747949281673 } from './migrations/1747949281673-ChangeDateToDatetime';
 
 export const TypeOrmDataSource = new DataSource({
   type: 'sqlite',
@@ -15,5 +16,5 @@ export const TypeOrmDataSource = new DataSource({
     AccountPersistenceEntity,
     TransactionPersistenceEntity,
   ],
-  migrations: [InitDb1747919198591],
+  migrations: [InitDb1747919198591, ChangeDateToDatetime1747949281673],
 });

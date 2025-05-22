@@ -13,8 +13,8 @@ export interface ITransactionBuilder {
   withId(id: Id): ITransactionBuilder;
   withDate(date: Date): ITransactionBuilder;
   withAmount(amount: Money): ITransactionBuilder;
-  withSource?(source: AccountNumber): ITransactionBuilder;
-  withTarget?(target: AccountNumber): ITransactionBuilder;
+  withSource(source: AccountNumber): ITransactionBuilder;
+  withTarget(target: AccountNumber): ITransactionBuilder;
   withDescription(description: TransactionDescription): ITransactionBuilder;
   build(): Transaction;
 }
@@ -137,6 +137,10 @@ export class CreditBuilder implements ITransactionBuilder {
     return this;
   }
 
+  withSource(): ITransactionBuilder {
+    return this;
+  }
+
   public withDescription(
     description: TransactionDescription,
   ): ITransactionBuilder {
@@ -187,6 +191,10 @@ export class DebitBuilder implements ITransactionBuilder {
 
   public withSource(source: AccountNumber): ITransactionBuilder {
     this.source = source;
+    return this;
+  }
+
+  withTarget(): ITransactionBuilder {
     return this;
   }
 

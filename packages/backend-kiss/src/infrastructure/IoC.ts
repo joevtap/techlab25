@@ -2,6 +2,7 @@ import { Container } from 'inversify';
 import { DataSource } from 'typeorm';
 
 import { IAccountRepository } from '../repositories/IAccountRepository';
+import { ITransactionRepository } from '../repositories/ITransactionRespository';
 import { IUnitOfWork } from '../repositories/IUnitOfWork';
 import { IUserRepository } from '../repositories/IUserRepository';
 import { AccountService } from '../services/AccountService';
@@ -12,6 +13,7 @@ import { UserService } from '../services/UserService';
 
 import { TypeOrmDataSource } from './orm';
 import { AccountRepository } from './repositories/AccountRepository';
+import { TransactionRepository } from './repositories/TransactionRepository';
 import { UnitOfWork } from './repositories/UnityOfWork';
 import { UserRepository } from './repositories/UserRepository';
 import { BcryptPasswordHasher } from './services/BcryptPasswordHasher';
@@ -56,5 +58,9 @@ export class IoC {
     this.container
       .bind<AccountService>(TOKENS.ACCOUNT_SERVICE)
       .to(AccountService);
+
+    this.container
+      .bind<ITransactionRepository>(TOKENS.TRANSACTION_REPOSITORY)
+      .to(TransactionRepository);
   }
 }

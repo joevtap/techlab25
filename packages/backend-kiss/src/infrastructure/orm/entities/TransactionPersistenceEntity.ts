@@ -9,7 +9,7 @@ export class TransactionPersistenceEntity {
 
   @Column({
     name: 'date',
-    type: 'date',
+    type: 'datetime',
   })
   date!: Date;
 

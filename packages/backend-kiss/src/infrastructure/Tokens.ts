@@ -8,4 +8,6 @@ export const TOKENS = {
   USER_SERVICE: Symbol.for('UserService'),
   ACCOUNT_REPOSITORY: Symbol.for('AccountRepository'),
   ACCOUNT_SERVICE: Symbol.for('AccountService'),
+  TRANSACTION_REPOSITORY: Symbol.for('TransactionRepository'),
+  TRANSACTION_SERVICE: Symbol.for('TransactionService'),
 };

@@ -2,11 +2,13 @@ import { injectable, inject } from 'inversify';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { IAccountRepository } from '../../repositories/IAccountRepository';
+import { ITransactionRepository } from '../../repositories/ITransactionRespository';
 import { IUnitOfWork } from '../../repositories/IUnitOfWork';
 import { IUserRepository } from '../../repositories/IUserRepository';
 import { TOKENS } from '../Tokens';
 
 import { AccountRepository } from './AccountRepository';
+import { TransactionRepository } from './TransactionRepository';
 import { UserRepository } from './UserRepository';
 
 @injectable()
@@ -20,6 +22,9 @@ export class UnitOfWork implements IUnitOfWork {
 
     @inject(TOKENS.ACCOUNT_REPOSITORY)
     public accountRepository: IAccountRepository,
+
+    @inject(TOKENS.TRANSACTION_REPOSITORY)
+    public transactionRepository: ITransactionRepository,
   ) {}
 
   public async start() {
@@ -30,6 +35,8 @@ export class UnitOfWork implements IUnitOfWork {
     const transactionalManager = this.queryRunner.manager;
     (this.userRepository as UserRepository).manager = transactionalManager;
     (this.accountRepository as AccountRepository).manager =
+      transactionalManager;
+    (this.transactionRepository as TransactionRepository).manager =
       transactionalManager;
   }
 
@@ -43,6 +50,8 @@ export class UnitOfWork implements IUnitOfWork {
     (this.userRepository as UserRepository).manager = this.dataSource.manager;
     (this.accountRepository as AccountRepository).manager =
       this.dataSource.manager;
+    (this.transactionRepository as TransactionRepository).manager =
+      this.dataSource.manager;
   }
 
   public async rollback() {
@@ -54,6 +63,8 @@ export class UnitOfWork implements IUnitOfWork {
 
     (this.userRepository as UserRepository).manager = this.dataSource.manager;
     (this.accountRepository as AccountRepository).manager =
+      this.dataSource.manager;
+    (this.transactionRepository as TransactionRepository).manager =
       this.dataSource.manager;
   }
 }
