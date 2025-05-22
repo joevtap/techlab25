@@ -1,3 +1,5 @@
 coverage/
 dist/
 tsconfig.tsbuildinfo
+
+sqlite.db
