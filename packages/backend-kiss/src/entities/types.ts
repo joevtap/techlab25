@@ -1,4 +1,5 @@
 export type Id = string;
+export type Token = string;
 
 export type Email = string;
 export type Username = string;

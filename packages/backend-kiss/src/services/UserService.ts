@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 
+import { Token } from '../entities/types';
 import { User } from '../entities/User';
 import { AuthenticationError } from '../errors/AuthenticationError';
 import { InvalidCredentialsError } from '../errors/InvalidCredentialsError';
@@ -49,9 +50,7 @@ export class UserService {
     }
   }
 
-  public async signUserIn(
-    user: Omit<User, 'id' | 'username'>,
-  ): Promise<string> {
+  public async signUserIn(user: Omit<User, 'id' | 'username'>): Promise<Token> {
     try {
       await this.uow.start();
 
@@ -74,7 +73,7 @@ export class UserService {
 
       await this.uow.commit();
 
-      const token = await this.tokenService.generateToken({
+      const token: Token = await this.tokenService.generateToken({
         id: existingUser.id,
         email: existingUser.email,
         username: existingUser.username,
