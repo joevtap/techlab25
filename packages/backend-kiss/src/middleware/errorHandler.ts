@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ZodError } from 'zod';
+import { ZodError } from 'zod/v4';
 
 import { BusinessRuleViolationError } from '../errors/BusinessRuleViolationError';
 import { DomainError } from '../errors/DomainError';
@@ -66,8 +66,7 @@ export function errorHandler(
   if (err instanceof ZodError) {
     res.status(400).json({
       type: 'ValidationError',
-      message: 'Validation error',
-      details: err.errors,
+      details: err.issues,
     });
     return;
   }
