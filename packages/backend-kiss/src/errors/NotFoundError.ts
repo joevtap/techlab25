@@ -5,6 +5,6 @@ export class NotFoundError extends DomainError {
     const message = id
       ? `${entity} with id ${id} not found`
       : `${entity} not found`;
-    super(message);
+    super(`Not Found Error: ${message}`);
   }
 }
