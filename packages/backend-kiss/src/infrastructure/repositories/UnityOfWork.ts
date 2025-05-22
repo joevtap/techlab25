@@ -6,6 +6,7 @@ import { IUnitOfWork } from '../../repositories/IUnitOfWork';
 import { IUserRepository } from '../../repositories/IUserRepository';
 import { TOKENS } from '../Tokens';
 
+import { AccountRepository } from './AccountRepository';
 import { UserRepository } from './UserRepository';
 
 @injectable()
@@ -28,6 +29,8 @@ export class UnitOfWork implements IUnitOfWork {
 
     const transactionalManager = this.queryRunner.manager;
     (this.userRepository as UserRepository).manager = transactionalManager;
+    (this.accountRepository as AccountRepository).manager =
+      transactionalManager;
   }
 
   public async commit() {
@@ -38,6 +41,8 @@ export class UnitOfWork implements IUnitOfWork {
     this.queryRunner = undefined;
 
     (this.userRepository as UserRepository).manager = this.dataSource.manager;
+    (this.accountRepository as AccountRepository).manager =
+      this.dataSource.manager;
   }
 
   public async rollback() {
@@ -48,5 +53,7 @@ export class UnitOfWork implements IUnitOfWork {
     this.queryRunner = undefined;
 
     (this.userRepository as UserRepository).manager = this.dataSource.manager;
+    (this.accountRepository as AccountRepository).manager =
+      this.dataSource.manager;
   }
 }
