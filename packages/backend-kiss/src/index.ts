@@ -1,3 +1,8 @@
-export function sum(a: number, b: number) {
-  return a + b;
-}
+import { exit } from 'node:process';
+
+import { main } from './app';
+
+main().catch((error) => {
+  console.error(error);
+  exit(1);
+});

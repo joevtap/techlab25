@@ -3,4 +3,9 @@ export const TOKENS = {
   PASSWORD_HASHER: Symbol.for('PasswordHasher'),
   ID_GENERATOR: Symbol.for('IdGenerator'),
   DATA_SOURCE: Symbol.for('DataSource'),
+  UOW: Symbol.for('UnitOfWork'),
+  USER_REPOSITORY: Symbol.for('UserRepository'),
+  USER_SERVICE: Symbol.for('UserService'),
+  ACCOUNT_REPOSITORY: Symbol.for('AccountRepository'),
+  ACCOUNT_SERVICE: Symbol.for('AccountService'),
 };
