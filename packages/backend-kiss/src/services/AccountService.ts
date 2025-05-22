@@ -24,8 +24,8 @@ export class AccountService {
   private readonly MAX_BALANCE = 10_000_00;
 
   public constructor(
-    @inject(TOKENS.UOW) private uow: IUnitOfWork,
-    @inject(TOKENS.ID_GENERATOR) private idGenerator: IIdGenerator,
+    @inject(TOKENS.UOW) private readonly uow: IUnitOfWork,
+    @inject(TOKENS.ID_GENERATOR) private readonly idGenerator: IIdGenerator,
   ) {}
 
   public async createAccount(

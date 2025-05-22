@@ -20,10 +20,11 @@ import { ITokenService } from './ITokenService';
 @injectable()
 export class UserService {
   public constructor(
-    @inject(TOKENS.UOW) private uow: IUnitOfWork,
-    @inject(TOKENS.ID_GENERATOR) private idGenerator: IIdGenerator,
-    @inject(TOKENS.TOKEN_SERVICE) private tokenService: ITokenService,
-    @inject(TOKENS.PASSWORD_HASHER) private passwordHasher: IPasswordHasher,
+    @inject(TOKENS.UOW) private readonly uow: IUnitOfWork,
+    @inject(TOKENS.ID_GENERATOR) private readonly idGenerator: IIdGenerator,
+    @inject(TOKENS.TOKEN_SERVICE) private readonly tokenService: ITokenService,
+    @inject(TOKENS.PASSWORD_HASHER)
+    private readonly passwordHasher: IPasswordHasher,
   ) {}
 
   public async createUser(

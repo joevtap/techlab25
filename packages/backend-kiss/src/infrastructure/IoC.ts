@@ -9,6 +9,7 @@ import { AccountService } from '../services/AccountService';
 import { IIdGenerator } from '../services/IIdGenerator';
 import { IPasswordHasher } from '../services/IPasswordHasher';
 import { ITokenService } from '../services/ITokenService';
+import { TransactionService } from '../services/TransactionService';
 import { UserService } from '../services/UserService';
 
 import { TypeOrmDataSource } from './orm';
@@ -62,5 +63,9 @@ export class IoC {
     this.container
       .bind<ITransactionRepository>(TOKENS.TRANSACTION_REPOSITORY)
       .to(TransactionRepository);
+
+    this.container
+      .bind<TransactionService>(TOKENS.TRANSACTION_SERVICE)
+      .to(TransactionService);
   }
 }

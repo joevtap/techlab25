@@ -44,7 +44,7 @@ export class TransactionRepository implements ITransactionRepository {
       .createQueryBuilder(TransactionPersistenceEntity, 'transaction')
       .leftJoinAndSelect('transaction.source', 'source')
       .leftJoinAndSelect('transaction.target', 'target')
-      .where('source.number = :accountId OR target.number = :accountId', {
+      .where('(source.number = :accountId OR target.number = :accountId)', {
         accountId: accountNumber,
       });
 
@@ -56,6 +56,8 @@ export class TransactionRepository implements ITransactionRepository {
       queryBuilder.andWhere('transaction.date <= :to', { to });
     }
 
+    queryBuilder.orderBy('transaction.date', 'DESC');
+
     const transactions = await queryBuilder.getMany();
 
     return transactions.map(
@@ -65,8 +67,8 @@ export class TransactionRepository implements ITransactionRepository {
           t.date,
           t.amount,
           t.type as TransactionType,
-          t.source.number,
-          t.target.number,
+          t.source?.number,
+          t.target?.number,
           t.description,
         ),
     );
