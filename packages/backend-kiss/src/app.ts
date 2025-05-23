@@ -21,6 +21,10 @@ export async function main() {
 
   app.use(express.json());
 
+  app.get('/health', (req, res) => {
+    res.status(200).send();
+  });
+
   app.route('/teste').get(
     validate(
       z.object({

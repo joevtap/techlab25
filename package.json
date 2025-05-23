@@ -16,7 +16,11 @@
     "format": "npm run format --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present"
+    "build": "npm run build --workspaces --if-present",
+    "prestart:backend": "npm run build -w @techlab25/backend-kiss",
+    "start:backend": "npm run start -w @techlab25/backend-kiss",
+    "e2e:api": "npm run test:api -w @techlab25/e2e",
+    "e2e:app": "npm run test:e2e -w @techlab25/e2e"
   },
   "repository": {
     "type": "git",
@@ -25,6 +29,7 @@
   "workspaces": [
     "packages/frontend",
     "packages/backend",
-    "packages/backend-kiss"
+    "packages/backend-kiss",
+    "packages/e2e"
   ]
 }
