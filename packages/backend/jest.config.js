@@ -9,7 +9,7 @@ module.exports = {
 
   roots: ['<rootDir>/src'],
 
-  testPathIgnorePatterns: ['dist/'],
+  testPathIgnorePatterns: ['dist/', '/__tests__/mocks/'],
 
   transform: {
     '^.+\\.ts?$': ['ts-jest', { tsconfig: 'tsconfig.tests.json' }],
