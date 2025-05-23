@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Banking API
-  description: A simple banking API allowing users to create accounts and perform transactions
-  version: 1.0.0
+  title: TechLab Jovi's Bank App
+  description: A demo banking application allowing users to create accounts and perform transactions
+  version: 0.0.0
 
 servers:
   - url: http://localhost:8080
@@ -17,6 +17,16 @@ components:
 
   schemas:
     Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of error
+        message:
+          type: string
+          description: Error message
+
+    InvalidCredentialsError:
       type: object
       properties:
         type:
@@ -180,18 +190,20 @@ components:
           type: string
         name:
           type: string
+        number:
+          type: string
         balance:
           type: integer
         type:
           type: string
           enum: [CHECKING, SAVINGS, INVESTMENTS]
+        ownerId:
+          type: string
 
     DeleteAccountResponse:
       type: object
       properties:
         id:
-          type: string
-        name:
           type: string
 
     ListUserAccountsResponse:
@@ -213,6 +225,8 @@ components:
               type:
                 type: string
                 enum: [CHECKING, SAVINGS, INVESTMENTS]
+              ownerId:
+                type: string
 
     # Transaction DTOs
     TransferFundsRequest:
@@ -245,14 +259,9 @@ components:
           type: string
         amount:
           type: integer
-        description:
-          type: string
         type:
           type: string
           enum: [TRANSFER]
-        timestamp:
-          type: string
-          format: date-time
 
     AddFundsRequest:
       type: object
@@ -279,14 +288,8 @@ components:
           type: string
         amount:
           type: integer
-        description:
-          type: string
-        type:
-          type: string
-          enum: [CREDIT]
-        timestamp:
-          type: string
-          format: date-time
+        newBalance:
+          type: integer
 
     WithdrawFundsRequest:
       type: object
@@ -313,14 +316,8 @@ components:
           type: string
         amount:
           type: integer
-        description:
-          type: string
-        type:
-          type: string
-          enum: [DEBIT]
-        timestamp:
-          type: string
-          format: date-time
+        newBalance:
+          type: integer
 
     ListTransactionsByAccountNumberResponse:
       type: object
@@ -343,7 +340,7 @@ components:
               type:
                 type: string
                 enum: [DEBIT, CREDIT, TRANSFER]
-              timestamp:
+              date:
                 type: string
                 format: date-time
 
@@ -416,7 +413,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthenticationError'
+                $ref: '#/components/schemas/InvalidCredentialsError'
         '500':
           description: Internal server error
           content:
@@ -580,7 +577,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
         '422':
-          description: Business rule violation (e.g. cannot delete an account with balance)
+          description: Business rule violation (e.g. cannot delete an account you do not own)
           content:
             application/json:
               schema:
@@ -607,6 +604,20 @@ paths:
           schema:
             type: string
           description: Account Number
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: Filter transactions from this date/time (inclusive)
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: Filter transactions until this date/time (inclusive)
       responses:
         '200':
           description: Transactions retrieved successfully

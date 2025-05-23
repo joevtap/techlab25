@@ -46,11 +46,24 @@ export class TransactionController {
       const userId = req.user?.id as Id;
       const accountNumber = req.params.account as AccountNumber;
 
-      const validatedData = ListTransactionsByAccountNumberSchema.parse({
-        ...req.body,
+      const data: Record<string, unknown> = {
         requestingUserId: userId,
         accountNumber: accountNumber,
+      };
+
+      Object.keys(req.query).forEach((key) => {
+        data[key] = req.query[key];
       });
+
+      if (req.query.from && typeof req.query.from === 'string') {
+        data.from = new Date(req.query.from);
+      }
+
+      if (req.query.to && typeof req.query.to === 'string') {
+        data.to = new Date(req.query.to);
+      }
+
+      const validatedData = ListTransactionsByAccountNumberSchema.parse(data);
 
       const response =
         await this.transactionService.listTransactionsByAccountNumber(
