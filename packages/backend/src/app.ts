@@ -31,6 +31,7 @@ function setupMiddleware(app: Express): void {
   app.use(
     '/reference',
     apiReference({
+      theme: 'elysiajs',
       url: '/openapi.yaml',
     }),
   );
