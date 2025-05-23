@@ -1,5 +1,5 @@
 {
-  "name": "@techlab25/backend-kiss",
+  "name": "@techlab25/backend",
   "private": true,
   "author": "joelvtorres2024@gmail.com",
   "license": "MIT",
@@ -13,11 +13,9 @@
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "migrations": "typeorm-ts-node-commonjs migration:run -d ./src/infrastructure/orm/DataSource.ts"
+    "typeorm": "export $(cat .env.development | xargs) && typeorm-ts-node-commonjs"
   },
   "dependencies": {
-    "@scalar/express-api-reference": "^0.8.1",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -26,10 +24,10 @@
     "jose": "^6.0.11",
     "morgan": "^1.10.0",
     "nanoid": "^5.1.5",
+    "pg": "^8.16.0",
     "reflect-metadata": "^0.2.2",
-    "sqlite3": "^5.1.7",
     "typeorm": "^0.3.24",
-    "zod": "^3.25.22"
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
