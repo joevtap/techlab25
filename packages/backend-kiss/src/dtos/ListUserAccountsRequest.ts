@@ -1,6 +1,8 @@
-import { Id } from '../entities/types';
+import { z } from 'zod/v4';
 
-export type ListUserAccountsRequest = {
-  ownerId: Id;
-  requestingUserId: Id;
-};
+export type ListUserAccountsRequest = z.infer<typeof ListUserAccountsSchema>;
+
+export const ListUserAccountsSchema = z.object({
+  ownerId: z.nanoid(),
+  requestingUserId: z.nanoid(),
+});

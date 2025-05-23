@@ -6,7 +6,7 @@ import {
   TransactionType,
 } from '../entities/types';
 
-export interface TransactionDto {
+export type TransactionDto = {
   id: Id;
   type: TransactionType;
   amount: Money;
@@ -14,8 +14,8 @@ export interface TransactionDto {
   sourceAccountNumber?: AccountNumber;
   targetAccountNumber?: AccountNumber;
   description?: TransactionDescription;
-}
+};
 
-export interface ListTransactionsByAccountNumberResponse {
+export type ListTransactionsByAccountNumberResponse = {
   transactions: TransactionDto[];
-}
+};

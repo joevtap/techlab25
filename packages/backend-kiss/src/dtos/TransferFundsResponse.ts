@@ -1,8 +1,8 @@
 import { Id, Money } from '../entities/types';
 
-export interface TransferFundsResponse {
+export type TransferFundsResponse = {
   id: Id;
   sourceAccountNumber: string;
   targetAccountNumber: string;
   amount: Money;
-}
+};

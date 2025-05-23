@@ -1,6 +1,9 @@
 import { Container } from 'inversify';
 import { DataSource } from 'typeorm';
 
+import { UserController } from '../controllers';
+import { AccountController } from '../controllers/AccountController';
+import { TransactionController } from '../controllers/TransactionController';
 import { IAccountRepository } from '../repositories/IAccountRepository';
 import { ITransactionRepository } from '../repositories/ITransactionRespository';
 import { IUnitOfWork } from '../repositories/IUnitOfWork';
@@ -67,5 +70,17 @@ export class IoC {
     this.container
       .bind<TransactionService>(TOKENS.TRANSACTION_SERVICE)
       .to(TransactionService);
+
+    this.container
+      .bind<UserController>(TOKENS.USER_CONTROLLER)
+      .to(UserController);
+
+    this.container
+      .bind<AccountController>(TOKENS.ACCOUNT_CONTROLLER)
+      .to(AccountController);
+
+    this.container
+      .bind<TransactionController>(TOKENS.TRANSACTION_CONTROLLER)
+      .to(TransactionController);
   }
 }

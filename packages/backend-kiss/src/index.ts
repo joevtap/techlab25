@@ -1,8 +1,18 @@
-import { exit } from 'node:process';
+import { createApp } from './app';
+import { config } from './config';
 
-import { main } from './app';
+async function startServer() {
+  try {
+    const app = await createApp();
 
-main().catch((error) => {
-  console.error(error);
-  exit(1);
-});
+    const port = config.PORT || 8080;
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+startServer();

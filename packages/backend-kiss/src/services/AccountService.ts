@@ -20,7 +20,7 @@ import { IIdGenerator } from './IIdGenerator';
 
 @injectable()
 export class AccountService {
-  private readonly MIN_BALANCE = 100;
+  private readonly MIN_BALANCE = 1_00;
   private readonly MAX_BALANCE = 10_000_00;
 
   public constructor(

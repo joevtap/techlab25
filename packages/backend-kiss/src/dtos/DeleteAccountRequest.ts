@@ -1,3 +1,8 @@
-import { Id } from '../entities/types';
+import { z } from 'zod/v4';
 
-export type DeleteAccountRequest = { accountId: Id; requestingUserId: Id };
+export type DeleteAccountRequest = z.infer<typeof DeleteAccountSchema>;
+
+export const DeleteAccountSchema = z.object({
+  accountId: z.nanoid(),
+  requestingUserId: z.nanoid(),
+});
