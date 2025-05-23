@@ -43,6 +43,18 @@ describe('Account Entity', () => {
       expect(() => account.deposit(-100)).toThrow(BusinessRuleViolationError);
     });
 
+    it('should throw an error with the correct message when amount is zero', () => {
+      expect(() => account.deposit(0)).toThrow(
+        'Deposit amount must be positive',
+      );
+    });
+
+    it('should throw an error with the correct message when amount is negative', () => {
+      expect(() => account.deposit(-100)).toThrow(
+        'Deposit amount must be positive',
+      );
+    });
+
     it('should create a new Account instance and not modify the original', () => {
       const updatedAccount = account.deposit(500);
 
@@ -68,6 +80,18 @@ describe('Account Entity', () => {
     it('should throw an error when amount is not positive', () => {
       expect(() => account.withdraw(0)).toThrow(BusinessRuleViolationError);
       expect(() => account.withdraw(-100)).toThrow(BusinessRuleViolationError);
+    });
+
+    it('should throw an error with the correct message when amount is zero', () => {
+      expect(() => account.withdraw(0)).toThrow(
+        'Withdrawal amount must be positive',
+      );
+    });
+
+    it('should throw an error with the correct message when amount is negative', () => {
+      expect(() => account.withdraw(-100)).toThrow(
+        'Withdrawal amount must be positive',
+      );
     });
 
     it('should throw InsufficientFundsError when balance is less than amount', () => {

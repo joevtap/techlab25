@@ -95,6 +95,18 @@ describe('Transaction Entity', () => {
       expect(() => builder.build()).toThrow('requires a target account');
     });
 
+    it('should throw error with correct message when target account is missing', () => {
+      const builder = Transaction.newCreditTransaction()
+        .withId(transactionId)
+        .withAmount(amount)
+        .withDescription(description)
+        .withDate(testDate);
+
+      expect(() => builder.build()).toThrow(
+        'Credit transaction requires a target account',
+      );
+    });
+
     it('should ignore source account setting for credit transactions', () => {
       const transaction = Transaction.newCreditTransaction()
         .withId(transactionId)
@@ -134,6 +146,18 @@ describe('Transaction Entity', () => {
 
       expect(() => builder.build()).toThrow(BusinessRuleViolationError);
       expect(() => builder.build()).toThrow('requires a source account');
+    });
+
+    it('should throw error with correct message when source account is missing', () => {
+      const builder = Transaction.newDebitTransaction()
+        .withId(transactionId)
+        .withAmount(amount)
+        .withDescription(description)
+        .withDate(testDate);
+
+      expect(() => builder.build()).toThrow(
+        'Debit transaction requires a source account',
+      );
     });
 
     it('should ignore target account setting for debit transactions', () => {
