@@ -1,8 +1,10 @@
 import { Express } from 'express';
 
-import { UserController } from './controllers';
-import { AccountController } from './controllers/AccountController';
-import { TransactionController } from './controllers/TransactionController';
+import {
+  AccountController,
+  TransactionController,
+  UserController,
+} from './controllers';
 import { IoC } from './infrastructure/IoC';
 import { TOKENS } from './infrastructure/Tokens';
 import { authenticate } from './middleware/authentication';

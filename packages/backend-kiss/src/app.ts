@@ -1,3 +1,4 @@
+import { apiReference } from '@scalar/express-api-reference';
 import cors from 'cors';
 import express, { Express } from 'express';
 import helmet from 'helmet';
@@ -18,6 +19,8 @@ export async function createApp(): Promise<Express> {
 
   registerRoutes(app);
 
+  app.use(express.static('public'));
+
   app.use(errorHandler);
 
   return app;
@@ -25,6 +28,12 @@ export async function createApp(): Promise<Express> {
 
 function setupMiddleware(app: Express): void {
   app.use(cors({ origin: '*' }));
+  app.use(
+    '/reference',
+    apiReference({
+      url: '/openapi.yaml',
+    }),
+  );
   app.use(helmet());
   app.use(morgan('tiny'));
   app.use(express.json());

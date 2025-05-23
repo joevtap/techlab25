@@ -17,6 +17,7 @@
     "migrations": "typeorm-ts-node-commonjs migration:run -d ./src/infrastructure/orm/DataSource.ts"
   },
   "dependencies": {
+    "@scalar/express-api-reference": "^0.8.1",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",

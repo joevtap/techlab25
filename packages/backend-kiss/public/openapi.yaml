@@ -1,0 +1,800 @@
+openapi: 3.0.3
+info:
+  title: Banking API
+  description: A simple banking API allowing users to create accounts and perform transactions
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of error
+        message:
+          type: string
+          description: Error message
+
+    ValidationError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'ValidationError'
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+
+    AuthenticationError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'AuthenticationError'
+        message:
+          type: string
+
+    NotFoundError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'NotFoundError'
+        message:
+          type: string
+
+    UserAlreadyExistsError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'UserAlreadyExistsError'
+        message:
+          type: string
+
+    BusinessRuleViolationError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'BusinessRuleViolationError'
+        message:
+          type: string
+
+    # User DTOs
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - password
+        - username
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        username:
+          type: string
+          minLength: 2
+
+    CreateUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+
+    SignUserInRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+
+    SignUserInResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    # Account DTOs
+    CreateAccountRequest:
+      type: object
+      required:
+        - name
+        - balance
+        - type
+      properties:
+        name:
+          type: string
+          minLength: 2
+        balance:
+          type: integer
+          minimum: 100
+          maximum: 1000000
+          description: Amount in cents
+        type:
+          type: string
+          enum: [CHECKING, SAVINGS, INVESTMENTS]
+
+    CreateAccountResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        number:
+          type: string
+        balance:
+          type: integer
+        type:
+          type: string
+          enum: [CHECKING, SAVINGS, INVESTMENTS]
+        ownerId:
+          type: string
+
+    UpdateAccountRequest:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+          minLength: 2
+        type:
+          type: string
+          enum: [CHECKING, SAVINGS, INVESTMENTS]
+
+    UpdateAccountResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        balance:
+          type: integer
+        type:
+          type: string
+          enum: [CHECKING, SAVINGS, INVESTMENTS]
+
+    DeleteAccountResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    ListUserAccountsResponse:
+      type: object
+      properties:
+        accounts:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              number:
+                type: string
+              balance:
+                type: integer
+              type:
+                type: string
+                enum: [CHECKING, SAVINGS, INVESTMENTS]
+
+    # Transaction DTOs
+    TransferFundsRequest:
+      type: object
+      required:
+        - sourceAccountNumber
+        - targetAccountNumber
+        - amount
+      properties:
+        sourceAccountNumber:
+          type: string
+        targetAccountNumber:
+          type: string
+        amount:
+          type: integer
+          minimum: 100
+          maximum: 1000000
+          description: Amount in cents
+        description:
+          type: string
+
+    TransferFundsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        sourceAccountNumber:
+          type: string
+        targetAccountNumber:
+          type: string
+        amount:
+          type: integer
+        description:
+          type: string
+        type:
+          type: string
+          enum: [TRANSFER]
+        timestamp:
+          type: string
+          format: date-time
+
+    AddFundsRequest:
+      type: object
+      required:
+        - accountNumber
+        - amount
+      properties:
+        accountNumber:
+          type: string
+        amount:
+          type: integer
+          minimum: 100
+          maximum: 1000000
+          description: Amount in cents
+        description:
+          type: string
+
+    AddFundsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        accountNumber:
+          type: string
+        amount:
+          type: integer
+        description:
+          type: string
+        type:
+          type: string
+          enum: [CREDIT]
+        timestamp:
+          type: string
+          format: date-time
+
+    WithdrawFundsRequest:
+      type: object
+      required:
+        - accountNumber
+        - amount
+      properties:
+        accountNumber:
+          type: string
+        amount:
+          type: integer
+          minimum: 100
+          maximum: 1000000
+          description: Amount in cents
+        description:
+          type: string
+
+    WithdrawFundsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        accountNumber:
+          type: string
+        amount:
+          type: integer
+        description:
+          type: string
+        type:
+          type: string
+          enum: [DEBIT]
+        timestamp:
+          type: string
+          format: date-time
+
+    ListTransactionsByAccountNumberResponse:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              sourceAccountNumber:
+                type: string
+              targetAccountNumber:
+                type: string
+              amount:
+                type: integer
+              description:
+                type: string
+              type:
+                type: string
+                enum: [DEBIT, CREDIT, TRANSFER]
+              timestamp:
+                type: string
+                format: date-time
+
+paths:
+  /user/sign-up:
+    post:
+      summary: Create a new user
+      description: Register a new user in the system
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAlreadyExistsError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/sign-in:
+    post:
+      summary: Sign in a user
+      description: Authenticate a user and retrieve a JWT token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUserInRequest'
+      responses:
+        '200':
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUserInResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /accounts/all:
+    get:
+      summary: Get all user accounts
+      description: List all accounts owned by the authenticated user
+      tags:
+        - Accounts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of accounts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserAccountsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /accounts/create:
+    post:
+      summary: Create a new account
+      description: Create a new bank account for the authenticated user
+      tags:
+        - Accounts
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        '201':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAccountResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /accounts/update/{id}:
+    patch:
+      summary: Update an account
+      description: Update an account's details
+      tags:
+        - Accounts
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Account ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+      responses:
+        '200':
+          description: Account updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAccountResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /accounts/delete/{id}:
+    delete:
+      summary: Delete an account
+      description: Delete a user's account
+      tags:
+        - Accounts
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Account ID
+      responses:
+        '200':
+          description: Account deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAccountResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '422':
+          description: Business rule violation (e.g. cannot delete an account with balance)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessRuleViolationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transactions/{account}:
+    get:
+      summary: Get transactions by account number
+      description: List all transactions for a specific account
+      tags:
+        - Transactions
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: account
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Account Number
+      responses:
+        '200':
+          description: Transactions retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTransactionsByAccountNumberResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transactions/transfer:
+    post:
+      summary: Transfer funds
+      description: Transfer funds between accounts
+      tags:
+        - Transactions
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferFundsRequest'
+      responses:
+        '200':
+          description: Transfer completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferFundsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '422':
+          description: Business rule violation (e.g. insufficient funds)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessRuleViolationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transactions/deposit:
+    post:
+      summary: Deposit funds
+      description: Add funds to an account
+      tags:
+        - Transactions
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddFundsRequest'
+      responses:
+        '200':
+          description: Deposit completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddFundsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transactions/withdraw:
+    post:
+      summary: Withdraw funds
+      description: Withdraw funds from an account
+      tags:
+        - Transactions
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawFundsRequest'
+      responses:
+        '200':
+          description: Withdrawal completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawFundsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '422':
+          description: Business rule violation (e.g. insufficient funds)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessRuleViolationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /health:
+    get:
+      summary: Health check
+      description: Check if the API is up and running
+      tags:
+        - System
+      responses:
+        '200':
+          description: API is healthy

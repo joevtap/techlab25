@@ -1,9 +1,11 @@
 import { Container } from 'inversify';
 import { DataSource } from 'typeorm';
 
-import { UserController } from '../controllers';
-import { AccountController } from '../controllers/AccountController';
-import { TransactionController } from '../controllers/TransactionController';
+import {
+  UserController,
+  AccountController,
+  TransactionController,
+} from '../controllers';
 import { IAccountRepository } from '../repositories/IAccountRepository';
 import { ITransactionRepository } from '../repositories/ITransactionRespository';
 import { IUnitOfWork } from '../repositories/IUnitOfWork';
