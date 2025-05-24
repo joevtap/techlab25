@@ -2,9 +2,9 @@
 module.exports = {
   testEnvironment: 'node',
 
-  // Coverage
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  coveragePathIgnorePatterns: ['/__tests__/mocks/'],
   coverageProvider: 'v8',
 
   roots: ['<rootDir>/src'],
