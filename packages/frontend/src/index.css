@@ -4,6 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --error: hsl(347deg, 87%, 44%, 10%);
+  --error-foreground: hsl(347deg, 87%, 44%);
+  --success: hsl(109deg, 58%, 40%, 10%);
+  --success-foreground: hsl(109deg, 58%, 40%);
+  --warning: hsl(35deg, 77%, 49%, 10%);
+  --warning-foreground: hsl(35deg, 77%, 49%);
   --background: oklch(0.9578 0.0058 264.5321);
   --foreground: oklch(0.4355 0.043 279.325);
   --card: oklch(1 0 0);
@@ -62,6 +68,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --error: hsl(343deg, 81%, 75%, 10%);
+    --error-foreground: hsl(343deg, 81%, 75%);
+    --success: hsl(115deg, 54%, 76%, 10%);
+    --success-foreground: hsl(115deg, 54%, 76%);
+    --warning: hsl(41deg, 86%, 83%, 10%);
+    --warning-foreground: hsl(41deg, 86%, 83%);
     --background: oklch(0.2155 0.0254 284.0647);
     --foreground: oklch(0.8787 0.0426 272.2767);
     --card: oklch(0.2429 0.0304 283.911);
@@ -120,6 +132,12 @@
 }
 
 @theme inline {
+  --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
