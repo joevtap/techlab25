@@ -12,6 +12,7 @@ import '@fontsource/geist-sans/600.css';
 import '@fontsource/geist-sans/700.css';
 import '@fontsource-variable/merriweather/index.css';
 import '@fontsource-variable/jetbrains-mono/index.css';
+import Dashboard from './pages/Dashboard.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -30,7 +31,7 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <Routes>
         <Route index element={<App />} />
-        <Route path="dashboard" element={<App />} />
+        <Route path="dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
