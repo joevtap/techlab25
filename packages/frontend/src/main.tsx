@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from './App.tsx';
+import App from './app.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
 import { Toaster } from 'sonner';
@@ -13,7 +13,7 @@ import '@fontsource/geist-sans/700.css';
 import '@fontsource-variable/merriweather/index.css';
 import '@fontsource-variable/jetbrains-mono/index.css';
 // import Dashboard from './pages/Dashboard.tsx';
-import { DashboardContainer } from './pages/Placeholder.tsx';
+import { DashboardContainer } from './pages/placeholder.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
