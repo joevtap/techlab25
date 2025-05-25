@@ -1,3 +1,4 @@
+import { AccountsContainer } from '@/components/accounts-container';
 import { CreateAccountModal } from '@/components/create-account-modal';
 import { TransactionsContainer } from '@/components/transactions-container';
 import { Button } from '@/components/ui/button';
@@ -27,8 +28,8 @@ export function DashboardContainer() {
 
         {/* {hasAccounts ? ( */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-slate-900">
-            {/* <AccountsContainer /> */}
+          <div className="lg:col-span-1">
+            <AccountsContainer />
           </div>
           <div className="lg:col-span-2">
             <TransactionsContainer />
