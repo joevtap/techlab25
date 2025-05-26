@@ -15,11 +15,11 @@ export function OperationButtons({
   disabled = false,
 }: OperationButtonsProps) {
   return (
-    <div className="grid grid-cols-1 gap-2">
+    <div className="flex flex-col gap-2">
       <Button
         variant="outline"
         size="sm"
-        className="flex items-center gap-1 w-full"
+        className="flex items-center gap-1 w-full cursor-pointer"
         onClick={onTransfer}
         disabled={disabled}
       >
@@ -29,7 +29,7 @@ export function OperationButtons({
       <Button
         variant="outline"
         size="sm"
-        className="flex items-center gap-1 w-full"
+        className="flex items-center gap-1 w-full cursor-pointer"
         onClick={onDeposit}
         disabled={disabled}
       >
@@ -39,7 +39,7 @@ export function OperationButtons({
       <Button
         variant="outline"
         size="sm"
-        className="flex items-center gap-1 w-full"
+        className="flex items-center gap-1 w-full cursor-pointer"
         onClick={onWithdraw}
         disabled={disabled}
       >

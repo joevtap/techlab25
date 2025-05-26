@@ -15,17 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router';
-import { z } from 'zod';
-
-const SignInFormSchema = z.object({
-  email: z
-    .string()
-    .email('Email inválido')
-    .min(5, 'Email deve conter pelo menos 5 caracteres'),
-  password: z.string().min(8, 'Senha deve conter pelo menos 8 caracteres'),
-});
-
-export type SignInFormValues = z.infer<typeof SignInFormSchema>;
+import { SignInFormSchema, type SignInFormValues } from '@/types/signInForm';
 
 type SignInFormProps = {
   onSubmit: SubmitHandler<SignInFormValues>;

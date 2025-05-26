@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -18,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { useAccounts } from '@/hooks/useAccounts';
 
 interface CreateAccountModalProps {
   isOpen: boolean;
@@ -29,72 +29,23 @@ export function CreateAccountModal({
   onClose,
 }: CreateAccountModalProps) {
   const [accountType, setAccountType] = useState('');
-  const [initialBalance, setInitialBalance] = useState('');
   const [formattedBalance, setFormattedBalance] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { createAccount } = useAccounts();
 
   const handleBalanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, formattedValue } = formatCurrencyInput(e.target.value);
-    setInitialBalance(value);
+    const { formattedValue } = formatCurrencyInput(e.target.value);
     setFormattedBalance(formattedValue);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('submit');
 
-    if (!accountType || !initialBalance) {
-      toast.error('Preencha todos os campos obrigatórios');
-      return;
-    }
-
-    const balance = Number.parseFloat(initialBalance);
-    if (isNaN(balance) || balance < 0) {
-      toast.error('Insira um saldo inicial válido');
-      return;
-    }
-
-    setIsLoading(true);
-
-    setTimeout(() => {
-      const existingAccountsJSON = localStorage.getItem('userAccounts');
-      const existingAccounts = existingAccountsJSON
-        ? JSON.parse(existingAccountsJSON)
-        : [];
-
-      const accountTypeMap = {
-        CHECKING: 'Conta Corrente',
-        SAVINGS: 'Poupança',
-        INVESTMENT: 'Investimento',
-      };
-
-      const newAccount = {
-        id: (existingAccounts.length + 1).toString(),
-        type:
-          accountTypeMap[accountType as keyof typeof accountTypeMap] ||
-          accountType,
-        number: Math.floor(10000000 + Math.random() * 90000000).toString(),
-        balance: balance,
-        currency: 'BRL',
-      };
-
-      const updatedAccounts = [...existingAccounts, newAccount];
-      localStorage.setItem('userAccounts', JSON.stringify(updatedAccounts));
-      localStorage.setItem('hasAccounts', 'true');
-
-      setIsLoading(false);
-      toast.success('Conta criada com sucesso');
-
-      resetForm();
-      onClose();
-
-      window.location.reload();
-    }, 1000);
-  };
-
-  const resetForm = () => {
-    setAccountType('');
-    setInitialBalance('');
-    setFormattedBalance('');
+    await createAccount({
+      name: 'Teste',
+      balance: 10_000_00,
+      type: 'CHECKING',
+    });
   };
 
   return (
@@ -132,9 +83,7 @@ export function CreateAccountModal({
             <Button type="button" variant="outline" onClick={onClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Criando...' : 'Criar Conta'}
-            </Button>
+            <Button type="submit">Criar conta</Button>
           </DialogFooter>
         </form>
       </DialogContent>

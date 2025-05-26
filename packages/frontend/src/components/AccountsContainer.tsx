@@ -1,39 +1,23 @@
-import { AccountsList } from '@/components/accounts-list';
+import { AccountsList } from '@/components/AccountsList';
 import { OperationButtons } from '@/components/operation-buttons';
 import { TotalBalance } from '@/components/total-balance';
+import { useAccounts } from '@/hooks/useAccounts';
 // import { TransferModal } from '@/components/TransferModal';
 // import { DepositModal } from '@/components/deposit-modal';
 // import { WithdrawModal } from '@/components/WithdrawModal';
-import { useState, useEffect } from 'react';
-
-interface Account {
-  id: string;
-  type: string;
-  number: string;
-  balance: number;
-  currency: string;
-}
+import { useEffect, useState } from 'react';
 
 export function AccountsContainer() {
-  const [accounts, setAccounts] = useState<Account[]>([]);
+  const { accounts, fetchAccounts } = useAccounts();
   const [selectedAccountId, setSelectedAccountId] = useState('');
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  // const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  // const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  // const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
 
   useEffect(() => {
-    // Load accounts from localStorage
-    const accountsJSON = localStorage.getItem('userAccounts');
-    if (accountsJSON) {
-      const loadedAccounts = JSON.parse(accountsJSON);
-      setAccounts(loadedAccounts);
-
-      // Set the first account as selected by default
-      if (loadedAccounts.length > 0 && !selectedAccountId) {
-        setSelectedAccountId(loadedAccounts[0].id);
-      }
-    }
-  }, [selectedAccountId]);
+    fetchAccounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const totalBalance = accounts.reduce(
     (sum, account) => sum + account.balance,
@@ -41,21 +25,24 @@ export function AccountsContainer() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <OperationButtons
-        onTransfer={() => setIsTransferModalOpen(true)}
-        onDeposit={() => setIsDepositModalOpen(true)}
-        onWithdraw={() => setIsWithdrawModalOpen(true)}
+        onTransfer={() => {}}
+        onDeposit={() => {}}
+        onWithdraw={() => {}}
         disabled={accounts.length < 1}
       />
+      <div className="flex flex-col gap-4">
+        <AccountsList
+          accounts={accounts}
+          selectedAccountId={selectedAccountId}
+          onSelectAccount={setSelectedAccountId}
+        />
 
-      <AccountsList
-        accounts={accounts}
-        selectedAccountId={selectedAccountId}
-        onSelectAccount={setSelectedAccountId}
-      />
+        <div className="block bg-foreground/10 h-[1px] w-full"></div>
 
-      {accounts.length > 0 && <TotalBalance balance={totalBalance} />}
+        {accounts.length > 0 && <TotalBalance balance={totalBalance} />}
+      </div>
 
       {/* Modals */}
       {/* {accounts.length > 0 && (

@@ -1,5 +1,7 @@
+import type { Email, Id, Username } from './types';
+
 export type User = {
-  id: string;
-  email: string;
-  username: string;
+  id: Id;
+  email: Email;
+  username: Username;
 };

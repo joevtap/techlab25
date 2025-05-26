@@ -1,15 +1,8 @@
 'use client';
 
-import { AccountCard } from '@/components/account-card';
+import { AccountCard } from '@/components/AccountCard';
 import { Card, CardContent } from '@/components/ui/card';
-
-interface Account {
-  id: string;
-  type: string;
-  number: string;
-  balance: number;
-  currency: string;
-}
+import type { Account } from '@/types/account';
 
 interface AccountsListProps {
   accounts: Account[];
@@ -25,7 +18,7 @@ export function AccountsList({
   if (accounts.length === 0) {
     return (
       <Card>
-        <CardContent className="py-6">
+        <CardContent>
           <p className="text-center text-muted-foreground">
             Nenhuma conta encontrada
           </p>
@@ -35,7 +28,7 @@ export function AccountsList({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-4">
       {accounts.map((account) => (
         <AccountCard
           key={account.id}

@@ -1,35 +1,21 @@
-import { AccountsContainer } from '@/components/accounts-container';
+import { AccountsContainer } from '@/components/AccountsContainer';
 import { CreateAccountModal } from '@/components/create-account-modal';
+import { Header } from '@/components/Header';
 import { TransactionsContainer } from '@/components/transactions-container';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { useAuthenticatedRequest } from '@/hooks/useAuthenticatedRequest';
 import { PlusCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-export function DashboardContainer() {
+export function Dashboard() {
   const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] =
     useState(false);
 
-  const authFetch = useAuthenticatedRequest();
   const { session } = useAuth();
 
-  // const [hasAccounts, setHasAccounts] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await authFetch('http://localhost:8080/accounts/all');
-
-      if (res.ok) {
-        console.log(await res.json());
-      }
-    };
-
-    fetchData();
-  }, [authFetch]);
-
   return (
-    <main className="min-h-screen ">
-      {/* <Header /> */}
+    <main className="min-h-svh">
+      <Header />
       <div className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Olá, {session?.user.username}!</h1>
@@ -42,8 +28,7 @@ export function DashboardContainer() {
           </Button>
         </div>
 
-        {/* {hasAccounts ? ( */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-1">
             <AccountsContainer />
           </div>
@@ -51,16 +36,6 @@ export function DashboardContainer() {
             <TransactionsContainer />
           </div>
         </div>
-
-        {/* ) : (
-          <EmptyState
-            title="Você ainda não possui contas"
-            description="Crie sua primeira conta para começar"
-            actionLabel="Criar Conta"
-            onAction={() => setIsCreateAccountModalOpen(true)}
-            icon={<PlusCircle className="h-4 w-4" />}
-          />
-        )} */}
       </div>
 
       <CreateAccountModal
