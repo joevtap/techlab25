@@ -1,12 +1,14 @@
 import { useReducer } from 'react';
 import { AccountsContext, AccountsDispatchContext } from './AccountsContext';
 import type { Account, Accounts } from '@/types/account';
+import type { Id } from '@/types/types';
 
 export type AccountsState = Accounts;
 
 export type AccountsAction =
+  | { type: 'load'; value: Account[] }
   | { type: 'add'; value: Account }
-  | { type: 'load'; value: Account[] };
+  | { type: 'delete'; value: Id };
 
 export function AccountsProvider({
   children,
@@ -24,6 +26,12 @@ export function AccountsProvider({
         return { accounts: action.value };
       case 'add':
         return { accounts: [...state.accounts, action.value] };
+      case 'delete':
+        return {
+          accounts: state.accounts.filter((account) => {
+            return account.id !== action.value;
+          }),
+        };
       default:
         return initialState;
     }

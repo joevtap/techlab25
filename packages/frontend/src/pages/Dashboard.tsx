@@ -1,7 +1,7 @@
 import { AccountsContainer } from '@/components/AccountsContainer';
-import { CreateAccountModal } from '@/components/create-account-modal';
+import { CreateAccountModal } from '@/components/CreateAccountModal';
 import { Header } from '@/components/Header';
-import { TransactionsContainer } from '@/components/transactions-container';
+import { TransactionsContainer } from '@/components/TransactionsContainer';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { PlusCircle } from 'lucide-react';

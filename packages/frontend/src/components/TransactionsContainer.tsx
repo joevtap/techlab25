@@ -1,8 +1,8 @@
 import { TransactionsList } from '@/components/TransactionsList';
-import { PeriodFilter } from '@/components/period-filter';
+import { PeriodFilter } from '@/components/PeriodFilter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
-import type { Transaction } from './transaction-item';
+import type { Transaction } from './TransactionItem';
 
 // Mock data for transactions
 const mockTransactions: Transaction[] = [

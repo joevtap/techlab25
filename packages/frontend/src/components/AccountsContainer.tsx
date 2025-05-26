@@ -1,6 +1,6 @@
 import { AccountsList } from '@/components/AccountsList';
-import { OperationButtons } from '@/components/operation-buttons';
-import { TotalBalance } from '@/components/total-balance';
+import { OperationButtons } from '@/components/OperationButton';
+import { TotalBalance } from '@/components/TotalBalance';
 import { useAccounts } from '@/hooks/useAccounts';
 // import { TransferModal } from '@/components/TransferModal';
 // import { DepositModal } from '@/components/deposit-modal';
@@ -39,9 +39,12 @@ export function AccountsContainer() {
           onSelectAccount={setSelectedAccountId}
         />
 
-        <div className="block bg-foreground/10 h-[1px] w-full"></div>
-
-        {accounts.length > 0 && <TotalBalance balance={totalBalance} />}
+        {accounts.length > 0 && (
+          <>
+            <div className="block bg-foreground/10 h-[1px] w-full"></div>
+            <TotalBalance balance={totalBalance} />
+          </>
+        )}
       </div>
 
       {/* Modals */}

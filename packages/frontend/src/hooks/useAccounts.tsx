@@ -6,11 +6,32 @@ import { useContext } from 'react';
 import { useAuthenticatedRequest } from './useAuthenticatedRequest';
 import type { Account, Accounts, CreateAccountRequest } from '@/types/account';
 import { toast } from 'sonner';
+import type { Id } from '@/types/types';
 
 export function useAccounts() {
   const { accounts } = useContext(AccountsContext);
   const dispatch = useContext(AccountsDispatchContext);
   const authFetch = useAuthenticatedRequest();
+
+  const deleteAccount = async (id: Id) => {
+    try {
+      const res = await authFetch(
+        `http://localhost:8080/accounts/delete/${id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      if (res.ok) {
+        dispatch({ type: 'delete', value: id });
+        toast.success('Conta deletada com sucesso!');
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Erro ao deletar conta');
+    }
+  };
 
   const fetchAccounts = async () => {
     try {
@@ -64,5 +85,5 @@ export function useAccounts() {
     }
   };
 
-  return { accounts, createAccount, fetchAccounts };
+  return { accounts, createAccount, fetchAccounts, deleteAccount };
 }

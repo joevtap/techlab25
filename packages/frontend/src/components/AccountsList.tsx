@@ -28,7 +28,7 @@ export function AccountsList({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-max">
       {accounts.map((account) => (
         <AccountCard
           key={account.id}
