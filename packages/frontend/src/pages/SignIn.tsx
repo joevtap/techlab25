@@ -1,5 +1,6 @@
-import { SignInForm, type SignInFormValues } from '@/components/SignInForm';
+import { SignInForm } from '@/components/SignInForm';
 import { useAuth } from '@/hooks/useAuth';
+import type { SignInFormValues } from '@/types/signInForm';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
@@ -44,7 +45,7 @@ export function SignIn() {
         if (response.status === 401) {
           errorMessage = 'Email ou senha incorretos';
         } else {
-          errorMessage = 'Não foi possível fazer entrar';
+          errorMessage = 'Não foi possível entrar';
         }
 
         toast.error(errorMessage, { id: toastId });
