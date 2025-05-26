@@ -19,11 +19,11 @@ export class TransactionPersistenceEntity {
   @Column({ type: 'text' })
   type!: string;
 
-  @ManyToOne(() => AccountPersistenceEntity)
+  @ManyToOne(() => AccountPersistenceEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'source_account', referencedColumnName: 'number' })
   source!: AccountPersistenceEntity;
 
-  @ManyToOne(() => AccountPersistenceEntity)
+  @ManyToOne(() => AccountPersistenceEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'target_account', referencedColumnName: 'number' })
   target!: AccountPersistenceEntity;
 

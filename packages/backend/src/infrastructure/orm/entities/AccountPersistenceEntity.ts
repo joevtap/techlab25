@@ -19,7 +19,7 @@ export class AccountPersistenceEntity {
   @Column({ name: 'balance', type: 'integer' })
   balance!: number;
 
-  @ManyToOne(() => UserPersistenceEntity)
+  @ManyToOne(() => UserPersistenceEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'owner_id', referencedColumnName: 'id' })
   owner!: UserPersistenceEntity;
 }
