@@ -1,17 +1,18 @@
 import { AccountsContainer } from '@/components/AccountsContainer';
-import { CreateAccountModal } from '@/components/CreateAccountModal';
 import { Header } from '@/components/Header';
 import { TransactionsContainer } from '@/components/TransactionsContainer';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { useModal } from '@/hooks/useModal';
 import { PlusCircle } from 'lucide-react';
-import { useState } from 'react';
 
 export function Dashboard() {
-  const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] =
-    useState(false);
-
   const { session } = useAuth();
+  const { openModal } = useModal();
+
+  const handleCreateAccount = () => {
+    openModal('CREATE_ACCOUNT');
+  };
 
   return (
     <main className="min-h-svh">
@@ -20,7 +21,7 @@ export function Dashboard() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Olá, {session?.user.username}!</h1>
           <Button
-            onClick={() => setIsCreateAccountModalOpen(true)}
+            onClick={handleCreateAccount}
             className="flex items-center gap-2 cursor-pointer"
           >
             <PlusCircle className="h-4 w-4" />
@@ -37,11 +38,6 @@ export function Dashboard() {
           </div>
         </div>
       </div>
-
-      <CreateAccountModal
-        isOpen={isCreateAccountModalOpen}
-        onClose={() => setIsCreateAccountModalOpen(false)}
-      />
     </main>
   );
 }

@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from './ui/dialog';
 import { formatCurrencyInput } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import {
@@ -31,17 +31,15 @@ import {
   FormLabel,
   FormMessage,
 } from './ui/form';
+import { useModal } from '@/hooks/useModal';
 
-interface CreateAccountModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+type CreateAccountModalProps = {
+  modalId?: string;
+};
 
-export function CreateAccountModal({
-  isOpen,
-  onClose,
-}: CreateAccountModalProps) {
+export function CreateAccountModal({ modalId = '' }: CreateAccountModalProps) {
   const { createAccount } = useAccounts();
+  const { closeModal } = useModal();
 
   const form = useForm<CreateAccountFormValues>({
     resolver: zodResolver(CreateAccountFormSchema),
@@ -54,10 +52,11 @@ export function CreateAccountModal({
 
   const [formattedBalance, setFormattedBalance] = useState('');
 
-  useEffect(() => {
+  const onClose = () => {
     form.reset();
     setFormattedBalance('');
-  }, [isOpen, form]);
+    closeModal(modalId);
+  };
 
   const handleBalanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, formattedValue } = formatCurrencyInput(e.target.value);
@@ -93,7 +92,7 @@ export function CreateAccountModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Criar Nova Conta</DialogTitle>
