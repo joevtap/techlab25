@@ -1,5 +1,3 @@
-'use client';
-
 import { AccountCard } from '@/components/AccountCard';
 import { Card, CardContent } from '@/components/ui/card';
 import type { Account } from '@/types/account';
@@ -8,12 +6,16 @@ interface AccountsListProps {
   accounts: Account[];
   selectedAccountId: string;
   onSelectAccount: (accountId: string) => void;
+  onDeleteAccount: (accountId: string) => void;
+  onEditAccount: (accountId: string) => void;
 }
 
 export function AccountsList({
   accounts,
   selectedAccountId,
   onSelectAccount,
+  onDeleteAccount,
+  onEditAccount,
 }: AccountsListProps) {
   if (accounts.length === 0) {
     return (
@@ -35,6 +37,8 @@ export function AccountsList({
           account={account}
           isSelected={selectedAccountId === account.id}
           onSelect={() => onSelectAccount(account.id)}
+          onDelete={() => onDeleteAccount(account.id)}
+          onEdit={onEditAccount}
         />
       ))}
     </div>

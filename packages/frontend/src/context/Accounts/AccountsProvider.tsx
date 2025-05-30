@@ -8,7 +8,8 @@ export type AccountsState = Accounts;
 export type AccountsAction =
   | { type: 'load'; value: Account[] }
   | { type: 'add'; value: Account }
-  | { type: 'delete'; value: Id };
+  | { type: 'delete'; value: Id }
+  | { type: 'update'; value: Account };
 
 export function AccountsProvider({
   children,
@@ -30,6 +31,17 @@ export function AccountsProvider({
         return {
           accounts: state.accounts.filter((account) => {
             return account.id !== action.value;
+          }),
+        };
+      case 'update':
+        return {
+          accounts: state.accounts.map((account) => {
+            if (account.id === action.value.id) {
+              return {
+                ...action.value,
+              };
+            }
+            return account;
           }),
         };
       default:

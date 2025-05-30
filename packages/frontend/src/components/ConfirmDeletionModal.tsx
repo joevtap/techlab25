@@ -11,17 +11,17 @@ import {
 import { cn } from '@/lib/utils';
 import { buttonVariants } from './ui/button';
 
-interface ConfirmDeletionDiaglogProps {
+interface ConfirmDeletionModalProps {
   isOpen: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 }
 
-export function ConfirmDeletionDialog({
+export function ConfirmDeletionModal({
   isOpen,
   onCancel,
   onConfirm,
-}: ConfirmDeletionDiaglogProps) {
+}: ConfirmDeletionModalProps) {
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogContent>

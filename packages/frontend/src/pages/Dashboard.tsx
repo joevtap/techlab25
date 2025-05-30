@@ -1,17 +1,20 @@
 import { AccountsContainer } from '@/components/AccountsContainer';
+import { CreateAccountModal } from '@/components/CreateAccountModal';
 import { Header } from '@/components/Header';
 import { TransactionsContainer } from '@/components/TransactionsContainer';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { useModal } from '@/hooks/useModal';
 import { PlusCircle } from 'lucide-react';
+import { useState } from 'react';
 
 export function Dashboard() {
   const { session } = useAuth();
-  const { openModal } = useModal();
+
+  const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] =
+    useState(false);
 
   const handleCreateAccount = () => {
-    openModal('CREATE_ACCOUNT');
+    setIsCreateAccountModalOpen(true);
   };
 
   return (
@@ -38,6 +41,12 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+      <CreateAccountModal
+        isOpen={isCreateAccountModalOpen}
+        onClose={() => {
+          setIsCreateAccountModalOpen(false);
+        }}
+      />
     </main>
   );
 }

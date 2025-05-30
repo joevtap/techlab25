@@ -4,7 +4,12 @@ import {
 } from '@/context/Accounts/AccountsContext';
 import { useContext } from 'react';
 import { useAuthenticatedRequest } from './useAuthenticatedRequest';
-import type { Account, Accounts, CreateAccountRequest } from '@/types/account';
+import type {
+  Account,
+  Accounts,
+  CreateAccountRequest,
+  UpdateAccountRequest,
+} from '@/types/account';
 import { toast } from 'sonner';
 import type { Id } from '@/types/types';
 
@@ -12,6 +17,34 @@ export function useAccounts() {
   const { accounts } = useContext(AccountsContext);
   const dispatch = useContext(AccountsDispatchContext);
   const authFetch = useAuthenticatedRequest();
+
+  const updateAccount = async ({ id, name, type }: UpdateAccountRequest) => {
+    try {
+      const res = await authFetch(
+        `http://localhost:8080/accounts/update/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            type,
+          }),
+        },
+      );
+
+      if (res.ok) {
+        const value: Account = await res.json();
+        dispatch({ type: 'update', value });
+        toast.success('Conta atualizada com sucesso!');
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao atualizar conta');
+    }
+  };
 
   const deleteAccount = async (id: Id) => {
     try {
@@ -28,7 +61,7 @@ export function useAccounts() {
         return;
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error('Erro ao deletar conta');
     }
   };
@@ -43,7 +76,7 @@ export function useAccounts() {
         return;
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error('Não foi possível requisitar as contas do usuário');
     }
   };
@@ -85,5 +118,11 @@ export function useAccounts() {
     }
   };
 
-  return { accounts, createAccount, fetchAccounts, deleteAccount };
+  return {
+    accounts,
+    createAccount,
+    fetchAccounts,
+    deleteAccount,
+    updateAccount,
+  };
 }

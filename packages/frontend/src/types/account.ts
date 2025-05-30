@@ -12,6 +12,12 @@ export type CreateAccountRequest = {
   type: AccountType;
 };
 
+export type UpdateAccountRequest = {
+  id: Id;
+  name: AccountName;
+  type: AccountType;
+};
+
 export type Account = {
   id: Id;
   name: AccountName;
