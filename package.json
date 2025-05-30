@@ -18,9 +18,7 @@
     "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "prestart:backend": "npm run build -w @techlab25/backend",
-    "start:backend": "npm run start -w @techlab25/backend",
-    "e2e:api": "npm run test:api -w @techlab25/e2e",
-    "e2e:app": "npm run test:e2e -w @techlab25/e2e"
+    "start:backend": "npm run start -w @techlab25/backend"
   },
   "repository": {
     "type": "git",
@@ -28,7 +26,6 @@
   },
   "workspaces": [
     "packages/frontend",
-    "packages/backend",
-    "packages/e2e"
+    "packages/backend"
   ]
 }
