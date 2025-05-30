@@ -21,7 +21,7 @@ export function useAccounts() {
   const updateAccount = async ({ id, name, type }: UpdateAccountRequest) => {
     try {
       const res = await authFetch(
-        `http://localhost:8080/accounts/update/${id}`,
+        `${import.meta.env.VITE_API_BASEURL}/accounts/update/${id}`,
         {
           method: 'PATCH',
           headers: {
@@ -49,7 +49,7 @@ export function useAccounts() {
   const deleteAccount = async (id: Id) => {
     try {
       const res = await authFetch(
-        `http://localhost:8080/accounts/delete/${id}`,
+        `${import.meta.env.VITE_API_BASEURL}/accounts/delete/${id}`,
         {
           method: 'DELETE',
         },
@@ -68,7 +68,9 @@ export function useAccounts() {
 
   const fetchAccounts = async () => {
     try {
-      const res = await authFetch('http://localhost:8080/accounts/all');
+      const res = await authFetch(
+        `${import.meta.env.VITE_API_BASEURL}/accounts/all`,
+      );
 
       if (res.ok) {
         const { accounts }: Accounts = await res.json();
@@ -89,17 +91,20 @@ export function useAccounts() {
     const toastId = toast.loading('Criando conta...');
 
     try {
-      const res = await authFetch('http://localhost:8080/accounts/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const res = await authFetch(
+        `${import.meta.env.VITE_API_BASEURL}/accounts/create`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            balance,
+            type,
+          }),
         },
-        body: JSON.stringify({
-          name,
-          balance,
-          type,
-        }),
-      });
+      );
 
       if (res.ok) {
         const value: Account = await res.json();

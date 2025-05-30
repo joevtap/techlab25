@@ -19,17 +19,20 @@ export function SignUp() {
     const toastId = toast.loading('Criando conta...');
 
     try {
-      const response = await fetch('http://localhost:8080/user/sign-up', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASEURL}/user/sign-up`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: data.username,
+            email: data.email,
+            password: data.password,
+          }),
         },
-        body: JSON.stringify({
-          username: data.username,
-          email: data.email,
-          password: data.password,
-        }),
-      });
+      );
 
       const responseData = await response.json();
 

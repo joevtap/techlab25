@@ -19,16 +19,19 @@ export function SignIn() {
     const toastId = toast.loading('Entrando...');
 
     try {
-      const response = await fetch('http://localhost:8080/user/sign-in', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASEURL}/user/sign-in`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
         },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      });
+      );
 
       const responseData = await response.json();
 
