@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -21,9 +20,9 @@ import { useAccounts } from '@/hooks/useAccounts';
 import { useForm, type SubmitErrorHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  DepositFormSchema,
-  type DepositFormValues,
-} from '@/types/forms/depositForm';
+  WithdrawFormSchema,
+  type WithdrawFormValues,
+} from '@/types/forms/withdrawForm';
 import {
   Form,
   FormControl,
@@ -34,26 +33,26 @@ import {
 } from './ui/form';
 import type { Account } from '@/types/account';
 
-type DepositModalProps = {
+type WithdrawModalProps = {
   isOpen: boolean;
   onClose: () => void;
   accounts: Account[];
   selectedAccountId: string;
 };
 
-export function DepositModal({
+export function WithdrawModal({
   isOpen,
   onClose,
   accounts,
   selectedAccountId,
-}: DepositModalProps) {
-  const { depositToAccount } = useAccounts();
+}: WithdrawModalProps) {
+  const { withdrawFromAccount } = useAccounts();
   const selectedAccount = accounts.find(
     (account) => account.id === selectedAccountId,
   );
 
-  const form = useForm<DepositFormValues>({
-    resolver: zodResolver(DepositFormSchema),
+  const form = useForm<WithdrawFormValues>({
+    resolver: zodResolver(WithdrawFormSchema),
     defaultValues: {
       accountNumber: selectedAccount?.number || '',
       amount: undefined,
@@ -62,7 +61,47 @@ export function DepositModal({
   });
 
   const [formattedAmount, setFormattedAmount] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, formattedValue } = formatCurrencyInput(e.target.value);
+    setFormattedAmount(formattedValue);
+
+    form.setValue('amount', value, { shouldValidate: true });
+  };
+
+  const handleOnClose = () => {
+    form.reset();
+    setFormattedAmount('');
+    onClose();
+  };
+
+  async function onSubmit(data: WithdrawFormValues) {
+    const success = await withdrawFromAccount(
+      data.accountNumber,
+      data.amount,
+      data.description,
+    );
+
+    if (success) {
+      handleOnClose();
+    }
+  }
+
+  const onInvalid: SubmitErrorHandler<WithdrawFormValues> = (errors) => {
+    const errorMessages = [];
+
+    if (errors.accountNumber?.message) {
+      errorMessages.push(`Conta: ${errors.accountNumber.message}`);
+    }
+
+    if (errors.amount?.message) {
+      errorMessages.push(`Valor do saque: ${errors.amount.message}`);
+    }
+
+    if (errorMessages.length > 0) {
+      console.error('Form validation errors:', errors);
+    }
+  };
 
   // Reset account when modal opens if a selectedAccountId is provided
   useEffect(() => {
@@ -73,60 +112,11 @@ export function DepositModal({
     }
   }, [isOpen, selectedAccountId, selectedAccount, form]);
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, formattedValue } = formatCurrencyInput(e.target.value);
-    setFormattedAmount(formattedValue);
-    form.setValue('amount', value, { shouldValidate: true });
-  };
-
-  const handleOnClose = () => {
-    form.reset();
-    setFormattedAmount('');
-    setIsLoading(false);
-    onClose();
-  };
-
-  async function onSubmit(data: DepositFormValues) {
-    setIsLoading(true);
-    try {
-      const success = await depositToAccount(
-        data.accountNumber,
-        data.amount,
-        data.description,
-      );
-
-      if (success) {
-        handleOnClose();
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('Erro ao processar o depósito');
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  const onInvalid: SubmitErrorHandler<DepositFormValues> = (errors) => {
-    const errorMessages = [];
-
-    if (errors.accountNumber?.message) {
-      errorMessages.push(`Conta: ${errors.accountNumber.message}`);
-    }
-
-    if (errors.amount?.message) {
-      errorMessages.push(`Valor do depósito: ${errors.amount.message}`);
-    }
-
-    if (errorMessages.length > 0) {
-      console.error('Form validation errors:', errors);
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleOnClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Depositar Fundos</DialogTitle>
+          <DialogTitle>Sacar da conta</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -139,7 +129,7 @@ export function DepositModal({
               name="accountNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="account">Conta de Destino</FormLabel>
+                  <FormLabel htmlFor="account">Conta</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -151,8 +141,8 @@ export function DepositModal({
                     </FormControl>
                     <SelectContent>
                       {accounts.map((account) => (
-                        <SelectItem key={account.id} value={account.number}>
-                          {account.name} ({account.number}) - R${' '}
+                        <SelectItem key={account.number} value={account.number}>
+                          {account.name} - R${' '}
                           {(account.balance / 100).toFixed(2)}
                         </SelectItem>
                       ))}
@@ -168,7 +158,7 @@ export function DepositModal({
               name="amount"
               render={() => (
                 <FormItem>
-                  <FormLabel htmlFor="amount">Valor do depósito</FormLabel>
+                  <FormLabel htmlFor="amount">Valor do saque</FormLabel>
                   <FormControl>
                     <Input
                       id="amount"
@@ -188,13 +178,13 @@ export function DepositModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="description">
-                    Descrição (Opcional)
+                    Descrição (opcional)
                   </FormLabel>
                   <FormControl>
                     <Input
                       id="description"
                       {...field}
-                      placeholder="Descrição do depósito"
+                      placeholder="Adicione uma descrição para esse saque"
                     />
                   </FormControl>
                   <FormMessage />
@@ -211,12 +201,8 @@ export function DepositModal({
               >
                 Cancelar
               </Button>
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="cursor-pointer"
-              >
-                {isLoading ? 'Processando...' : 'Depositar'}
+              <Button type="submit" className="cursor-pointer">
+                Sacar
               </Button>
             </DialogFooter>
           </form>

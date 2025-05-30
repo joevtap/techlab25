@@ -2,9 +2,9 @@ import { AccountsList } from '@/components/AccountsList';
 import { OperationButtons } from '@/components/OperationButton';
 import { TotalBalance } from '@/components/TotalBalance';
 import { useAccounts } from '@/hooks/useAccounts';
-// import { TransferModal } from '@/components/TransferModal';
-// import { DepositModal } from '@/components/deposit-modal';
-// import { WithdrawModal } from '@/components/WithdrawModal';
+import { TransferModal } from '@/components/TransferModal';
+import { DepositModal } from '@/components/DepositModal';
+import { WithdrawModal } from '@/components/WithdrawModal';
 import { useEffect, useState } from 'react';
 import { ConfirmDeletionModal } from './ConfirmDeletionModal';
 import { UpdateAccountModal } from './UpdateAccountModal';
@@ -21,9 +21,9 @@ export function AccountsContainer() {
   const [isUpdateAccountModalOpen, setIsUpdateAccountModalOpen] =
     useState(false);
 
-  // const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
-  // const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
-  // const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
 
   useEffect(() => {
     fetchAccounts();
@@ -66,9 +66,9 @@ export function AccountsContainer() {
   return (
     <div className="flex flex-col gap-4">
       <OperationButtons
-        onTransfer={() => {}}
-        onDeposit={() => {}}
-        onWithdraw={() => {}}
+        onTransfer={() => setIsTransferModalOpen(true)}
+        onDeposit={() => setIsDepositModalOpen(true)}
+        onWithdraw={() => setIsWithdrawModalOpen(true)}
         disabled={accounts.length < 1}
       />
       <div className="flex flex-col gap-4">
@@ -100,26 +100,24 @@ export function AccountsContainer() {
             onClose={handleCloseUpdateModal}
             accountId={accountToEdit}
           />
-          {/* <TransferModal
+          <TransferModal
             isOpen={isTransferModalOpen}
             onClose={() => setIsTransferModalOpen(false)}
             accounts={accounts}
             selectedAccountId={selectedAccountId}
           />
-
           <DepositModal
             isOpen={isDepositModalOpen}
             onClose={() => setIsDepositModalOpen(false)}
             accounts={accounts}
             selectedAccountId={selectedAccountId}
           />
-
           <WithdrawModal
             isOpen={isWithdrawModalOpen}
             onClose={() => setIsWithdrawModalOpen(false)}
             accounts={accounts}
             selectedAccountId={selectedAccountId}
-          /> */}
+          />
         </>
       )}
     </div>

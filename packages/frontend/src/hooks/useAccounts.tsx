@@ -123,11 +123,136 @@ export function useAccounts() {
     }
   };
 
+  const transferBetweenAccounts = async (
+    sourceAccountNumber: string,
+    targetAccountNumber: string,
+    amount: number,
+    description?: string,
+  ) => {
+    const toastId = toast.loading('Realizando transferência...');
+
+    try {
+      const res = await authFetch(
+        `${import.meta.env.VITE_API_BASEURL}/transactions/transfer`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sourceAccountNumber,
+            targetAccountNumber,
+            amount,
+            description,
+          }),
+        },
+      );
+
+      if (res.ok) {
+        await fetchAccounts();
+        toast.success('Transferência realizada com sucesso!', { id: toastId });
+        return true;
+      }
+
+      toast.error('Não foi possível realizar a transferência', { id: toastId });
+      return false;
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao realizar transferência', { id: toastId });
+      return false;
+    }
+  };
+
+  const depositToAccount = async (
+    accountNumber: string,
+    amount: number,
+    description?: string,
+  ) => {
+    const toastId = toast.loading('Realizando depósito...');
+
+    try {
+      const res = await authFetch(
+        `${import.meta.env.VITE_API_BASEURL}/transactions/deposit`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            accountNumber,
+            amount,
+            description,
+          }),
+        },
+      );
+
+      if (res.ok) {
+        await fetchAccounts();
+        toast.success(
+          `Depósito de R$ ${(amount / 100).toFixed(2)} realizado com sucesso!`,
+          { id: toastId },
+        );
+        return true;
+      }
+
+      toast.error('Não foi possível realizar o depósito', { id: toastId });
+      return false;
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao realizar depósito', { id: toastId });
+      return false;
+    }
+  };
+
+  const withdrawFromAccount = async (
+    accountNumber: string,
+    amount: number,
+    description?: string,
+  ) => {
+    const toastId = toast.loading('Realizando saque...');
+
+    try {
+      const res = await authFetch(
+        `${import.meta.env.VITE_API_BASEURL}/transactions/withdraw`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            accountNumber,
+            amount,
+            description,
+          }),
+        },
+      );
+
+      if (res.ok) {
+        await fetchAccounts();
+        toast.success(
+          `Saque de R$ ${(amount / 100).toFixed(2)} realizado com sucesso!`,
+          { id: toastId },
+        );
+        return true;
+      }
+
+      toast.error('Não foi possível realizar o saque', { id: toastId });
+      return false;
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao realizar saque', { id: toastId });
+      return false;
+    }
+  };
+
   return {
     accounts,
     createAccount,
     fetchAccounts,
     deleteAccount,
     updateAccount,
+    transferBetweenAccounts,
+    depositToAccount,
+    withdrawFromAccount,
   };
 }
