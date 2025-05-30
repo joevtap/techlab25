@@ -13,14 +13,12 @@ export function formatCurrency(value: number): string {
 }
 
 export function formatCurrencyInput(inputValue: string): {
-  value: string;
+  value: number;
   formattedValue: string;
 } {
   const value = inputValue.replace(/\D/g, '');
 
   const numericValue = Number.parseInt(value, 10) || 0;
-
-  const actualValue = (numericValue / 100).toString();
 
   const formattedValue = (numericValue / 100).toLocaleString('pt-BR', {
     style: 'currency',
@@ -28,7 +26,7 @@ export function formatCurrencyInput(inputValue: string): {
   });
 
   return {
-    value: actualValue,
+    value: numericValue,
     formattedValue,
   };
 }

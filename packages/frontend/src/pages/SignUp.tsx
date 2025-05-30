@@ -1,6 +1,6 @@
 import { SignUpForm } from '@/components/SignUpForm';
 import { useAuth } from '@/hooks/useAuth';
-import type { SignUpFormValues } from '@/types/signUpForm';
+import type { SignUpFormValues } from '@/types/forms/signUpForm';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';

@@ -1,6 +1,6 @@
 import { SignInForm } from '@/components/SignInForm';
 import { useAuth } from '@/hooks/useAuth';
-import type { SignInFormValues } from '@/types/signInForm';
+import type { SignInFormValues } from '@/types/forms/signInForm';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';

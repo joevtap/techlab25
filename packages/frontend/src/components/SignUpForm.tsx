@@ -15,7 +15,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router';
-import { SignUpFormSchema, type SignUpFormValues } from '@/types/signUpForm';
+import {
+  SignUpFormSchema,
+  type SignUpFormValues,
+} from '@/types/forms/signUpForm';
 
 type SignUpFormProps = {
   onSubmit: SubmitHandler<SignUpFormValues>;
