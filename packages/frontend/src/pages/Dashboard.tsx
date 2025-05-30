@@ -21,7 +21,7 @@ export function Dashboard() {
           <h1 className="text-3xl font-bold">Olá, {session?.user.username}!</h1>
           <Button
             onClick={() => setIsCreateAccountModalOpen(true)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 cursor-pointer"
           >
             <PlusCircle className="h-4 w-4" />
             Nova Conta

@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from './ui/dialog';
 import { formatCurrencyInput } from '@/lib/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import {
@@ -54,6 +54,11 @@ export function CreateAccountModal({
 
   const [formattedBalance, setFormattedBalance] = useState('');
 
+  useEffect(() => {
+    form.reset();
+    setFormattedBalance('');
+  }, [isOpen, form]);
+
   const handleBalanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, formattedValue } = formatCurrencyInput(e.target.value);
     setFormattedBalance(formattedValue);
@@ -69,8 +74,6 @@ export function CreateAccountModal({
     });
 
     onClose();
-    form.reset();
-    setFormattedBalance('');
   }
 
   const onInvalid: SubmitErrorHandler<CreateAccountFormValues> = (errors) => {
@@ -162,10 +165,17 @@ export function CreateAccountModal({
             />
 
             <DialogFooter className="pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="cursor-pointer"
+              >
                 Cancelar
               </Button>
-              <Button type="submit">Criar conta</Button>
+              <Button type="submit" className="cursor-pointer">
+                Criar conta
+              </Button>
             </DialogFooter>
           </form>
         </Form>
