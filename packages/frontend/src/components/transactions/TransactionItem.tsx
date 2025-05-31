@@ -8,6 +8,12 @@ type TransactionItemProps = {
   selectedAccountId: string | undefined;
 };
 
+const descriptionMap: Record<string, string> = {
+  'Transfer funds': 'Transferência',
+  'Withdraw funds': 'Saque',
+  'Add funds': 'Depósito',
+};
+
 export function TransactionItem({
   transaction,
   selectedAccountId,
@@ -38,15 +44,31 @@ export function TransactionItem({
       >
         {getTransactionIcon(isIncoming)}
       </div>
-      <div className="flex-1 space-y-1">
-        <p className="font-medium">{transaction.description}</p>
-        <p className="text-sm text-muted-foreground">
-          {new Date(transaction.date).toLocaleDateString('pt-BR', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })}
-        </p>
+      <div className="flex-1 flex flex-col gap-2">
+        <div className="flex gap-2 items-center flex-wrap">
+          <p className="font-medium">
+            {descriptionMap[transaction.description] ?? transaction.description}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {new Date(transaction.date).toLocaleDateString('pt-BR', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </p>
+        </div>
+        <div className="flex gap-2 items-center flex-wrap">
+          {transaction.sourceAccountNumber && (
+            <p className="text-sm font-medium text-error-foreground font-mono bg-error p-1 rounded-md">
+              {transaction.sourceAccountNumber}
+            </p>
+          )}
+          {transaction.targetAccountNumber && (
+            <p className="text-sm font-medium text-success-foreground font-mono bg-success p-1 rounded-md">
+              {transaction.targetAccountNumber}
+            </p>
+          )}
+        </div>
       </div>
       <div
         className={cn(

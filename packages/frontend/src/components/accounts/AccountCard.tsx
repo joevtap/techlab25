@@ -78,9 +78,9 @@ export function AccountCard({
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center">
-          <div className="text-sm font-medium text-muted-foreground font-mono bg-muted p-1 rounded-md">
+          <p className="text-sm font-medium text-muted-foreground font-mono bg-muted p-1 rounded-md">
             {account.number}
-          </div>
+          </p>
           <div className="text-lg font-semibold">
             {formatCurrency(account.balance)}
           </div>
