@@ -1,13 +1,13 @@
-import { AccountsList } from '@/components/AccountsList';
-import { OperationButtons } from '@/components/OperationButton';
-import { TotalBalance } from '@/components/TotalBalance';
+import { AccountsList } from '@/components/accounts/AccountsList';
+import { OperationButtons } from '@/components/accounts/OperationButtons';
+import { TotalBalance } from '@/components/accounts/TotalBalance';
 import { useAccounts } from '@/hooks/useAccounts';
-import { TransferModal } from '@/components/TransferModal';
-import { DepositModal } from '@/components/DepositModal';
-import { WithdrawModal } from '@/components/WithdrawModal';
+import { TransferModal } from '@/components/modals/TransferModal';
+import { DepositModal } from '@/components/modals/DepositModal';
+import { WithdrawModal } from '@/components/modals/WithdrawModal';
 import { useEffect, useState } from 'react';
-import { ConfirmDeletionModal } from './ConfirmDeletionModal';
-import { UpdateAccountModal } from './UpdateAccountModal';
+import { ConfirmDeletionModal } from '../modals/ConfirmDeletionModal';
+import { UpdateAccountModal } from '../modals/UpdateAccountModal';
 
 export function AccountsContainer() {
   const { accounts, fetchAccounts, deleteAccount } = useAccounts();

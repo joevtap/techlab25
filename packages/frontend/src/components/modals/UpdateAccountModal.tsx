@@ -4,25 +4,24 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { formatCurrencyInput } from '@/lib/utils';
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+} from '../ui/dialog';
+import { useEffect } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../ui/select';
 import { useAccounts } from '@/hooks/useAccounts';
 import { useForm, type SubmitErrorHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  CreateAccountFormSchema,
-  type CreateAccountFormValues,
-} from '@/types/forms/createAccountForm';
+  UpdateAccountFormSchema,
+  type UpdateAccountFormValues,
+} from '@/types/forms/updateAccountForm';
 import {
   Form,
   FormControl,
@@ -30,54 +29,62 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
+} from '../ui/form';
 
-type CreateAccountModalProps = {
+interface UpdateAccountModalProps {
   isOpen: boolean;
   onClose: () => void;
-};
+  accountId: string | null;
+}
 
-export function CreateAccountModal({
+export function UpdateAccountModal({
   isOpen,
   onClose,
-}: CreateAccountModalProps) {
-  const { createAccount } = useAccounts();
+  accountId,
+}: UpdateAccountModalProps) {
+  const { accounts, updateAccount } = useAccounts();
+  const account = accountId
+    ? accounts.find((acc) => acc.id === accountId)
+    : null;
 
-  const form = useForm<CreateAccountFormValues>({
-    resolver: zodResolver(CreateAccountFormSchema),
+  const form = useForm<UpdateAccountFormValues>({
+    resolver: zodResolver(UpdateAccountFormSchema),
     defaultValues: {
-      name: '',
-      type: undefined,
-      balance: undefined,
+      name: account?.name || '',
+      type: account?.type,
     },
   });
 
-  const [formattedBalance, setFormattedBalance] = useState('');
-
-  const handleBalanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, formattedValue } = formatCurrencyInput(e.target.value);
-    setFormattedBalance(formattedValue);
-
-    form.setValue('balance', value, { shouldValidate: true });
-  };
+  useEffect(() => {
+    if (account) {
+      form.setValue('name', account.name);
+      form.setValue('type', account.type);
+    } else {
+      form.reset({
+        name: '',
+        type: undefined,
+      });
+    }
+  }, [account, form]);
 
   const handleOnClose = () => {
     form.reset();
-    setFormattedBalance('');
     onClose();
   };
 
-  async function onSubmit(data: CreateAccountFormValues) {
-    await createAccount({
+  async function onSubmit(data: UpdateAccountFormValues) {
+    if (!accountId || !account) return;
+
+    await updateAccount({
+      id: accountId,
       name: data.name,
       type: data.type,
-      balance: data.balance,
     });
 
-    handleOnClose();
+    onClose();
   }
 
-  const onInvalid: SubmitErrorHandler<CreateAccountFormValues> = (errors) => {
+  const onInvalid: SubmitErrorHandler<UpdateAccountFormValues> = (errors) => {
     const errorMessages = [];
 
     if (errors.name?.message) {
@@ -87,17 +94,13 @@ export function CreateAccountModal({
     if (errors.type?.message) {
       errorMessages.push(`Tipo da conta: ${errors.type.message}`);
     }
-
-    if (errors.balance?.message) {
-      errorMessages.push(`Saldo inicial: ${errors.balance.message}`);
-    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleOnClose()}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Criar Nova Conta</DialogTitle>
+          <DialogTitle>Atualizar Conta</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -129,7 +132,10 @@ export function CreateAccountModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="accountType">Tipo de Conta</FormLabel>
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger id="accountType" className="w-full">
                         <SelectValue placeholder="Selecione o tipo de conta" />
@@ -146,37 +152,11 @@ export function CreateAccountModal({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="balance"
-              render={() => (
-                <FormItem>
-                  <FormLabel htmlFor="initialBalance">Saldo Inicial</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="initialBalance"
-                      value={formattedBalance}
-                      onChange={handleBalanceChange}
-                      placeholder="R$ 0,00"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <DialogFooter className="pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleOnClose}
-                className="cursor-pointer"
-              >
+              <Button type="button" variant="outline" onClick={handleOnClose}>
                 Cancelar
               </Button>
-              <Button type="submit" className="cursor-pointer">
-                Criar conta
-              </Button>
+              <Button type="submit">Atualizar conta</Button>
             </DialogFooter>
           </form>
         </Form>

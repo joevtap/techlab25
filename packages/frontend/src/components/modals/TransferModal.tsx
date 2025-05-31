@@ -4,18 +4,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { formatCurrencyInput } from '@/lib/utils';
+} from '../ui/dialog';
+import { formatCurrency, formatCurrencyInput } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../ui/select';
 import { useAccounts } from '@/hooks/useAccounts';
 import { useForm, type SubmitErrorHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,8 +30,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
+} from '../ui/form';
 import type { Account } from '@/types/account';
+import { Undo } from 'lucide-react';
 
 type TransferModalProps = {
   isOpen: boolean;
@@ -116,7 +117,6 @@ export function TransferModal({
     }
   };
 
-  // Reset source account when modal opens if a selectedAccountId is provided
   useEffect(() => {
     if (isOpen && selectedAccountId && selectedAccount) {
       form.setValue('sourceAccountNumber', selectedAccount.number, {
@@ -155,8 +155,7 @@ export function TransferModal({
                     <SelectContent>
                       {accounts.map((account) => (
                         <SelectItem key={account.number} value={account.number}>
-                          {account.name} - R${' '}
-                          {(account.balance / 100).toFixed(2)}
+                          {account.name} - {formatCurrency(account.balance)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -198,8 +197,7 @@ export function TransferModal({
                               key={account.number}
                               value={account.number}
                             >
-                              {account.name} - R${' '}
-                              {(account.balance / 100).toFixed(2)}
+                              {account.name} - {formatCurrency(account.balance)}
                             </SelectItem>
                           ))}
                           <SelectItem value="manual">
@@ -209,7 +207,7 @@ export function TransferModal({
                       </Select>
                     </>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="flex gap-2 items-center">
                       <FormControl>
                         <Input
                           id="manualTargetAccount"
@@ -218,19 +216,16 @@ export function TransferModal({
                           className="w-full"
                         />
                       </FormControl>
-                      <p className="text-sm text-muted-foreground">
-                        Insira o número da conta de destino (ex: 123456789)
-                      </p>
                       <Button
                         type="button"
                         variant="outline"
-                        size="sm"
+                        aria-label="Voltar para seleção de conta"
                         onClick={() => {
                           setManualAccountEntry(false);
                           field.onChange('');
                         }}
                       >
-                        Voltar para seleção
+                        <Undo size={18} />
                       </Button>
                     </div>
                   )}

@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
-import { buttonVariants } from './ui/button';
+import { buttonVariants } from '../ui/button';
 
 interface ConfirmDeletionModalProps {
   isOpen: boolean;

@@ -4,18 +4,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { formatCurrencyInput } from '@/lib/utils';
+} from '../ui/dialog';
+import { formatCurrency, formatCurrencyInput } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../ui/select';
 import { useAccounts } from '@/hooks/useAccounts';
 import { useForm, type SubmitErrorHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,7 +30,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
+} from '../ui/form';
 import type { Account } from '@/types/account';
 
 type WithdrawModalProps = {
@@ -103,7 +103,6 @@ export function WithdrawModal({
     }
   };
 
-  // Reset account when modal opens if a selectedAccountId is provided
   useEffect(() => {
     if (isOpen && selectedAccountId && selectedAccount) {
       form.setValue('accountNumber', selectedAccount.number, {
@@ -142,8 +141,7 @@ export function WithdrawModal({
                     <SelectContent>
                       {accounts.map((account) => (
                         <SelectItem key={account.number} value={account.number}>
-                          {account.name} - R${' '}
-                          {(account.balance / 100).toFixed(2)}
+                          {account.name} - {formatCurrency(account.balance)}
                         </SelectItem>
                       ))}
                     </SelectContent>

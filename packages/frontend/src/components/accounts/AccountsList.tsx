@@ -1,4 +1,4 @@
-import { AccountCard } from '@/components/AccountCard';
+import { AccountCard } from '@/components/accounts/AccountCard';
 import { Card, CardContent } from '@/components/ui/card';
 import type { Account } from '@/types/account';
 

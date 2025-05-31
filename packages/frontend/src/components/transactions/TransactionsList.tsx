@@ -1,4 +1,4 @@
-import { TransactionItem } from '@/components/TransactionItem';
+import { TransactionItem } from '@/components/transactions/TransactionItem';
 
 type Transaction = {
   id: string;

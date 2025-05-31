@@ -10,14 +10,14 @@ import { formatCurrency } from '@/lib/utils';
 import type { Account } from '@/types/account';
 import { Pencil, Trash } from 'lucide-react';
 import { useMemo } from 'react';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 
 interface AccountCardProps {
   account: Account;
   isSelected: boolean;
   onSelect: () => void;
   onDelete: () => void;
-  onEdit: (accountId: string) => void; // Add this prop
+  onEdit: (accountId: string) => void;
 }
 
 export function AccountCard({

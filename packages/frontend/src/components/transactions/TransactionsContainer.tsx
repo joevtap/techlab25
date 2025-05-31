@@ -1,5 +1,5 @@
-import { TransactionsList } from '@/components/TransactionsList';
-import { PeriodFilter } from '@/components/PeriodFilter';
+import { TransactionsList } from '@/components/transactions/TransactionsList';
+import { PeriodFilter } from '@/components/transactions/PeriodFilter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
 import type { Transaction } from './TransactionItem';
