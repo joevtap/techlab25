@@ -2,6 +2,7 @@ import { AccountsList } from '@/components/accounts/AccountsList';
 import { OperationButtons } from '@/components/accounts/OperationButtons';
 import { TotalBalance } from '@/components/accounts/TotalBalance';
 import { useAccounts } from '@/hooks/useAccounts';
+import { useSelectedAccount } from '@/hooks/useSelectedAccount';
 import { TransferModal } from '@/components/modals/TransferModal';
 import { DepositModal } from '@/components/modals/DepositModal';
 import { WithdrawModal } from '@/components/modals/WithdrawModal';
@@ -11,7 +12,7 @@ import { UpdateAccountModal } from '../modals/UpdateAccountModal';
 
 export function AccountsContainer() {
   const { accounts, fetchAccounts, deleteAccount } = useAccounts();
-  const [selectedAccountId, setSelectedAccountId] = useState('');
+  const { selectedAccountId, setSelectedAccountId } = useSelectedAccount();
 
   const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
   const [isConfirmDeletionModalOpen, setIsConfirmDeletionModalOpen] =

@@ -1,20 +1,11 @@
 import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils';
-
-export type Transaction = {
-  id: string;
-  type: 'DEBIT' | 'CREDIT' | 'TRANSFER';
-  description: string;
-  amount: number;
-  date: string;
-  sourceAccountNumber?: string;
-  targetAccountNumber?: string;
-};
+import type { Transaction } from '@/types/transaction';
 
 type TransactionItemProps = {
   transaction: Transaction;
-  selectedAccountId: string;
+  selectedAccountId: string | undefined;
 };
 
 export function TransactionItem({
@@ -33,7 +24,9 @@ export function TransactionItem({
     return incoming ? 'bg-success' : 'bg-error';
   };
 
-  const isIncoming = transaction.targetAccountNumber === selectedAccountId;
+  const isIncoming = selectedAccountId
+    ? transaction.targetAccountNumber === selectedAccountId
+    : false;
 
   return (
     <div className="flex items-center gap-4 py-2">

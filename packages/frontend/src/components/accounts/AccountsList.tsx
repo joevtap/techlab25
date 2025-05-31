@@ -4,7 +4,7 @@ import type { Account } from '@/types/account';
 
 interface AccountsListProps {
   accounts: Account[];
-  selectedAccountId: string;
+  selectedAccountId?: string;
   onSelectAccount: (accountId: string) => void;
   onDeleteAccount: (accountId: string) => void;
   onEditAccount: (accountId: string) => void;

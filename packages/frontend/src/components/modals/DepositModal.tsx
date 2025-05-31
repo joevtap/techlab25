@@ -38,7 +38,7 @@ type DepositModalProps = {
   isOpen: boolean;
   onClose: () => void;
   accounts: Account[];
-  selectedAccountId: string;
+  selectedAccountId?: string;
 };
 
 export function DepositModal({

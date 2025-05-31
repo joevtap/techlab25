@@ -1,18 +1,9 @@
 import { TransactionItem } from '@/components/transactions/TransactionItem';
-
-type Transaction = {
-  id: string;
-  type: 'DEBIT' | 'CREDIT' | 'TRANSFER';
-  description: string;
-  amount: number;
-  date: string;
-  sourceAccountNumber?: string;
-  targetAccountNumber?: string;
-};
+import type { Transaction } from '@/types/transaction';
 
 interface TransactionsListProps {
   transactions: Transaction[];
-  selectedAccountId: string;
+  selectedAccountId: string | undefined;
 }
 
 export function TransactionsList({

@@ -1,136 +1,102 @@
 import { TransactionsList } from '@/components/transactions/TransactionsList';
 import { PeriodFilter } from '@/components/transactions/PeriodFilter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useState } from 'react';
-import type { Transaction } from './TransactionItem';
-
-// Mock data for transactions
-const mockTransactions: Transaction[] = [
-  {
-    id: '1',
-    type: 'TRANSFER',
-    description: 'Pagamento de Salário',
-    amount: 3500.0,
-    date: '2025-05-15T08:30:00',
-    sourceAccountNumber: 'Empresa Ltda.',
-    targetAccountNumber: '1',
-  },
-  {
-    id: '2',
-    type: 'TRANSFER',
-    description: 'Pagamento de Aluguel',
-    amount: 1200.0,
-    date: '2025-05-10T14:45:00',
-    sourceAccountNumber: '1',
-    targetAccountNumber: 'Imobiliária',
-  },
-  {
-    id: '3',
-    type: 'TRANSFER',
-    description: 'Supermercado',
-    amount: 87.35,
-    date: '2025-05-08T18:20:00',
-    sourceAccountNumber: '1',
-    targetAccountNumber: 'Mercado Central',
-  },
-  {
-    id: '4',
-    type: 'TRANSFER',
-    description: 'Reembolso',
-    amount: 29.99,
-    date: '2025-05-05T11:15:00',
-    sourceAccountNumber: 'Loja Online',
-    targetAccountNumber: '1',
-  },
-  {
-    id: '5',
-    type: 'TRANSFER',
-    description: 'Conta de Luz',
-    amount: 145.5,
-    date: '2025-05-03T09:30:00',
-    sourceAccountNumber: '1',
-    targetAccountNumber: 'Companhia Elétrica',
-  },
-  {
-    id: '6',
-    type: 'TRANSFER',
-    description: 'Saque no Caixa',
-    amount: 100.0,
-    date: '2025-05-01T16:45:00',
-    sourceAccountNumber: '1',
-    targetAccountNumber: 'Dinheiro',
-  },
-  {
-    id: '7',
-    type: 'TRANSFER',
-    description: 'Pagamento de Juros',
-    amount: 12.37,
-    date: '2025-04-30T00:00:00',
-    sourceAccountNumber: 'Banco',
-    targetAccountNumber: '2',
-  },
-  {
-    id: '8',
-    type: 'TRANSFER',
-    description: 'Transferência para Poupança',
-    amount: 500.0,
-    date: '2025-04-28T10:15:00',
-    sourceAccountNumber: '1',
-    targetAccountNumber: '2',
-  },
-];
+import { useCallback, useEffect, useState } from 'react';
+import { useTransactions } from '@/hooks/useTransactions';
+import { useSelectedAccount } from '@/hooks/useSelectedAccount';
+import { useAccounts } from '@/hooks/useAccounts';
+import { Loader2 } from 'lucide-react';
 
 export function TransactionsContainer() {
-  const [selectedPeriod, setSelectedPeriod] = useState('30days');
-  const [selectedAccountId, setSelectedAccountId] = useState('1');
-  const [transactions, setTransactions] = useState(mockTransactions);
+  const [selectedPeriod, setSelectedPeriod] = useState('all');
+  const [isLoading, setIsLoading] = useState(false);
+  const { transactions, fetchTransactions } = useTransactions();
+  const { selectedAccountId } = useSelectedAccount();
 
-  // Filter transactions based on selected account and period
-  const filteredTransactions = transactions.filter((transaction) => {
-    const isForSelectedAccount =
-      transaction.targetAccountNumber === selectedAccountId ||
-      transaction.sourceAccountNumber === selectedAccountId;
+  const getDateRange = useCallback(
+    (periodValue: string): { from?: Date; to?: Date } => {
+      const now = new Date();
+      const to = new Date(now);
+      let from: Date | undefined;
 
-    if (!isForSelectedAccount) return false;
-
-    const transactionDate = new Date(transaction.date);
-    const now = new Date();
-
-    switch (selectedPeriod) {
-      case '7days': {
-        const sevenDaysAgo = new Date(now.setDate(now.getDate() - 7));
-        return transactionDate >= sevenDaysAgo;
+      switch (periodValue) {
+        case '7days':
+          from = new Date(now);
+          from.setDate(now.getDate() - 7);
+          break;
+        case '30days':
+          from = new Date(now);
+          from.setDate(now.getDate() - 30);
+          break;
+        case '90days':
+          from = new Date(now);
+          from.setDate(now.getDate() - 90);
+          break;
+        case 'year':
+          from = new Date(now.getFullYear(), 0, 1);
+          break;
+        case 'all':
+        default:
+          from = undefined;
+          break;
       }
-      case '30days': {
-        const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
-        return transactionDate >= thirtyDaysAgo;
+
+      return { from, to };
+    },
+    [],
+  );
+
+  const { accounts } = useAccounts();
+
+  const selectedAccount = selectedAccountId
+    ? accounts.find((account) => account.id === selectedAccountId)
+    : undefined;
+
+  useEffect(() => {
+    const loadTransactions = async () => {
+      if (selectedAccountId && selectedAccount?.number) {
+        setIsLoading(true);
+        try {
+          const { from, to } = getDateRange(selectedPeriod);
+          await fetchTransactions(selectedAccount.number, from, to);
+        } finally {
+          setIsLoading(false);
+        }
       }
-      case '90days': {
-        const ninetyDaysAgo = new Date(now.setDate(now.getDate() - 90));
-        return transactionDate >= ninetyDaysAgo;
-      }
-      case 'year':
-        return transactionDate.getFullYear() === new Date().getFullYear();
-      case 'all':
-      default:
-        return true;
-    }
-  });
+    };
+
+    loadTransactions();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAccountId, selectedAccount, selectedPeriod]);
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Histórico de Transações</CardTitle>
+
         <PeriodFilter
           selectedPeriod={selectedPeriod}
           onPeriodChange={setSelectedPeriod}
         />
       </CardHeader>
       <CardContent>
-        <TransactionsList
-          transactions={filteredTransactions}
-          selectedAccountId={selectedAccountId}
-        />
+        {isLoading ? (
+          <div className="flex h-40 items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : selectedAccount?.number ? (
+          <TransactionsList
+            transactions={transactions}
+            selectedAccountId={selectedAccount.number}
+          />
+        ) : (
+          <div className="flex h-40 flex-col items-center justify-center text-center text-muted-foreground">
+            <p className="mb-2">
+              Selecione uma conta para visualizar as transações
+            </p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
