@@ -6,14 +6,14 @@ Minha entrega para o desafio WebApp do TechLab 2025, desafio de programação, I
 
 ## 📜 Índice
 
-- [🚀 Como rodar o projeto](#como-rodar-o-projeto)
+- [🚀 Como rodar o projeto](#-como-rodar-o-projeto)
 - [❓ Sobre]()
 - [⚛️ Tecnologias utilizadas]()
 - [🏗️ Estrutura do projeto]()
 - [🤓 Principais decisões arquiteturais]()
 - [🧪 Testes]()
 
-## Como rodar o projeto
+## 🚀 Como rodar o projeto
 
 Primeiro, clone o repositório por meio do comando:
 
