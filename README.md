@@ -58,21 +58,19 @@ npm run dev:frontend
 
 > Rodará o frontend em modo de desenvolvimento utilizando as variáveis de ambiente definidas em `./packages/frontend/.env.development`
 
-Se não modificou nenhuma variável de ambiente, o frontend estará rodando em http://localhost:5173.
+Se não modificou nenhuma variável de ambiente, o frontend estará rodando em http://localhost:5173
 
-Acesse a referência da API do backend em http://localhost:8080/reference.
+Acesse a referência da API do backend em http://localhost:8080/reference
 
 ## ❓ Sobre
 
-> O enunciado do desafio se encontra [Aqui](<https://github.com/tech4humans-brasil/techlab-ceu/blob/main/Finan%C3%A7as%20(Webapp)/Desafio%20WebApp.pdf>)
+> O enunciado do desafio se encontra [aqui](<https://github.com/tech4humans-brasil/techlab-ceu/blob/main/Finan%C3%A7as%20(Webapp)/Desafio%20WebApp.pdf>)
 
-O projeto consiste em uma pequena aplicação financeira em que é possível criar, listar, editar e deletar contas bancárias, além de realizar operações financeiras entre elas.
+O projeto consiste em uma pequena aplicação financeira em que é possível criar, listar, editar e deletar contas bancárias, além de realizar operações financeiras entre elas
 
-Além do proposto no enunciado do desafio, minha implementação inclui uma funcionalidade de cadastro e autenticação do usuário. Fiz essa adição porque senti que era algo que faltava para dar mais sentido à aplicação: contas bancárias terem donos e um usuário poder se identificar para operar apenas em cima de suas contas.
+Além do proposto no enunciado do desafio, minha implementação inclui uma funcionalidade de cadastro e autenticação do usuário. Fiz essa adição porque senti que era algo que faltava para dar mais sentido à aplicação: contas bancárias terem donos e um usuário poder se identificar para operar apenas em cima de suas contas
 
-A implementação consiste em um backend e um frontend, os dois utilizando a linguagem typescript e se comunicando por meio de uma API HTTP. Toda a lógica de negócios se encontra no backend, mas a validação das entradas do usuário é feita em ambas as pontas.
-
-Mais detalhes sobre o backend e o frontend podem ser encontrados em suas respectivas pastas:
+A implementação consiste em um backend e um frontend, os dois utilizando a linguagem typescript e se comunicando por meio de uma API HTTP. Toda a lógica de negócios se encontra no backend, mas a validação das entradas do usuário é feita em ambas as pontas
 
 ## ⚛️ Tecnologias utilizadas
 
@@ -80,7 +78,7 @@ Mais detalhes sobre o backend e o frontend podem ser encontrados em suas respect
 
 - **Node.js** (v22.15.1) - Runtime JavaScript server-side
 - **TypeScript** - Linguagem principal para type safety e produtividade
-- **Express** - Framework web minimalista para APIs REST
+- **Express** - Framework web minimalista para APIs HTTP
 - **TypeORM** - ORM para TypeScript, escolhido por sua excelente integração com TypeScript e recursos avançados de mapeamento objeto-relacional
 - **SQLite** - Banco de dados relacional embarcado, ideal para desenvolvimento e prototipagem
 - **Inversify** - Container de injeção de dependências para implementar inversão de controle
@@ -106,14 +104,19 @@ Mais detalhes sobre o backend e o frontend podem ser encontrados em suas respect
 - **tweakcn.com** - Ferramenta utilizada para personalização do tema do shadcn/ui, permitindo gerar paletas de cores customizadas e configurações de design system específicas para o projeto
 - **Modo Dark/Light** - Implementado usando a estratégia de CSS variables e _media query_ que seleciona a preferência do navegador do usuário como padrão
 
+### Assistência de IA
+
+- **v0.dev** - Utilizado para ideação e prototipagem rápida da interface frontend, gerando componentes React iniciais. ([Versão preliminar do v0](archive/banking-dashboard.zip))
+- **GitHub Copilot** - Assistência no desenvolvimento de código, elaboração de documentação e bootstrapping de testes unitários
+
 ## 🏗️ Estrutura do projeto
 
-O projeto está organizado como um monorepo utilizando npm workspaces, facilitando o compartilhamento de dependências e scripts entre os pacotes.
+O projeto está organizado como um monorepo utilizando npm workspaces, facilitando o compartilhamento de dependências e scripts entre os pacotes
 
 ```
 techlab25/
 ├── packages/
-│   ├── backend/                  # API REST em Node.js/TypeScript
+│   ├── backend/                  # API HTTP em Node.js/TypeScript
 │   │   ├── src/
 │   │   │   ├── controllers/      # Controladores HTTP
 │   │   │   ├── services/         # Regras de negócio
@@ -147,16 +150,6 @@ graph TB
     B --> C[Entities]
     B --> D[Repositories]
     D --> E[Database]
-
-    classDef interface fill:#e1f5fe
-    classDef application fill:#f3e5f5
-    classDef domain fill:#e8f5e8
-    classDef infrastructure fill:#fff3e0
-
-    class A interface
-    class B application
-    class C domain
-    class D,E infrastructure
 ```
 
 ### Contextos Delimitados (DDD)
@@ -191,14 +184,6 @@ graph TB
     Pages --> Components
     Components --> Context
     Context --> API
-
-    classDef ui fill:#e3f2fd
-    classDef state fill:#f1f8e9
-    classDef data fill:#fce4ec
-
-    class Pages,Components ui
-    class Context state
-    class API data
 ```
 
 ## 🤓 Principais decisões arquiteturais
@@ -291,7 +276,7 @@ graph TB
 - **Subdomínio Genérico**: Autenticação não é core business, apenas identifica usuários
 - **Princípio KISS**: Implementação simples e funcional
 - **Scalabilidade**: Não requer armazenamento de sessão no servidor
-- **Interoperabilidade**: Padrão amplamente aceito para APIs REST
+- **Interoperabilidade**: Padrão amplamente aceito para APIs HTTP
 
 ### 10. **Aplicação Estratégica do DDD**
 
@@ -307,12 +292,12 @@ graph TB
 
 #### **DDD Tático NÃO Aplicado**:
 
-- **Eventos de Domínio**: Comunicação síncrona entre módulos via interfaces
+- **Eventos de Domínio**: Comunicação direta entre serviços sem eventos assíncronos
 - **Aggregates Complexos**: Entidades simples sem agregados elaborados
 - **Domain Services Avançados**: Lógica concentrada nos Application Services
 - **Repository Pattern Puro**: Implementação simplificada para o escopo do projeto
 
-**Motivo**: Para o escopo de um projeto de demonstração, o DDD Estratégico oferece os benefícios de organização e arquitetura sem a complexidade adicional do DDD Tático completo.
+**Motivo**: Para o escopo de um projeto de demonstração, o DDD Estratégico oferece os benefícios de organização e arquitetura sem a complexidade adicional do DDD Tático completo
 
 ## 🧠 Lógica de Desenvolvimento
 
@@ -380,7 +365,7 @@ graph TB
 
 ### Estratégia de Testes
 
-O projeto implementa **testes unitários** focados na lógica de negócio do backend, garantindo a confiabilidade das regras financeiras críticas.
+O projeto implementa **testes unitários** focados na lógica de negócio do backend, garantindo a confiabilidade das regras financeiras críticas
 
 ### Principais Testes Implementados
 
@@ -402,4 +387,4 @@ O projeto implementa **testes unitários** focados na lógica de negócio do bac
 npm run test
 ```
 
-A estratégia priorizou testar a lógica de negócio crítica usando mocks para isolamento, garantindo que as regras financeiras funcionem corretamente independente da infraestrutura.
+A estratégia priorizou testar a lógica de negócio crítica usando mocks para isolamento, garantindo que as regras financeiras funcionem corretamente independente da infraestrutura
