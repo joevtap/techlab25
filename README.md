@@ -74,9 +74,6 @@ A implementação consiste em um backend e um frontend, os dois utilizando a lin
 
 Mais detalhes sobre o backend e o frontend podem ser encontrados em suas respectivas pastas:
 
-- [Backend](./packages/backend/README.md)
-- [Frontend](./packages/frontend/README.md)
-
 ## ⚛️ Tecnologias utilizadas
 
 ### Backend
@@ -96,22 +93,18 @@ Mais detalhes sobre o backend e o frontend podem ser encontrados em suas respect
 
 ### Frontend
 
-- **React** (v19) - Biblioteca para construção de interfaces de usuário
+- **React** - Biblioteca para construção de interfaces de usuário
 - **TypeScript** - Type safety no frontend
 - **Vite** - Build tool moderna e rápida
-- **TailwindCSS** (v4) - Framework CSS utility-first para estilização rápida
+- **TailwindCSS** - Framework CSS utility-first para estilização rápida
 - **shadcn/ui** - Sistema de componentes baseado em Radix UI e TailwindCSS, escolhido pela qualidade dos componentes, acessibilidade nativa e facilidade de customização
-- **React Hook Form** - Gerenciamento de formulários performático
-- **Zod** - Validação de esquemas compartilhada entre frontend e backend
-- **Sonner** - Biblioteca para toasts/notificações
-- **next-themes** - Suporte a temas dark/light
-- **Lucide React** - Ícones SVG
-- **@dicebear/core** - Geração de avatars
+- **React Hook Form** - Gerenciamento de formulários
+- **Zod** - Validação de schema
 
 ### Ferramentas e Customização
 
 - **tweakcn.com** - Ferramenta utilizada para personalização do tema do shadcn/ui, permitindo gerar paletas de cores customizadas e configurações de design system específicas para o projeto
-- **Modo Dark/Light** - Implementado usando next-themes, permitindo alternância entre temas claro e escuro com persistência da preferência do usuário
+- **Modo Dark/Light** - Implementado usando a estratégia de CSS variables e _media query_ que seleciona a preferência do navegador do usuário como padrão
 
 ## 🏗️ Estrutura do projeto
 
@@ -120,28 +113,28 @@ O projeto está organizado como um monorepo utilizando npm workspaces, facilitan
 ```
 techlab25/
 ├── packages/
-│   ├── backend/          # API REST em Node.js/TypeScript
+│   ├── backend/                  # API REST em Node.js/TypeScript
 │   │   ├── src/
-│   │   │   ├── controllers/    # Controladores HTTP
-│   │   │   ├── services/       # Regras de negócio
-│   │   │   ├── entities/       # Entidades de domínio
-│   │   │   ├── repositories/   # Interfaces e implementações de repositórios
-│   │   │   ├── infrastructure/ # Configurações de infraestrutura (ORM, DI)
-│   │   │   ├── dtos/          # Data Transfer Objects
-│   │   │   ├── errors/        # Classes de erro personalizadas
-│   │   │   └── middleware/    # Middlewares Express
-│   │   └── public/        # Documentação OpenAPI
-│   └── frontend/         # Interface de usuário em React
+│   │   │   ├── controllers/      # Controladores HTTP
+│   │   │   ├── services/         # Regras de negócio
+│   │   │   ├── entities/         # Entidades de domínio
+│   │   │   ├── repositories/     # Interfaces e implementações de repositórios
+│   │   │   ├── infrastructure/   # Configurações de infraestrutura (ORM, DI)
+│   │   │   ├── dtos/             # Data Transfer Objects
+│   │   │   ├── errors/           # Classes de erro personalizadas
+│   │   │   └── middleware/       # Middlewares Express
+│   │   └── public/               # Documentação OpenAPI
+│   └── frontend/                 # Interface de usuário em React
 │       ├── src/
-│       │   ├── components/    # Componentes React reutilizáveis
-│       │   ├── pages/        # Páginas da aplicação
-│       │   ├── context/      # Context API para gerenciamento de estado
-│       │   ├── hooks/        # Custom hooks
-│       │   ├── types/        # Definições de tipos TypeScript
-│       │   └── lib/          # Utilitários e configurações
-│       └── public/       # Assets estáticos
-├── docs/                 # Documentação e diagramas
-└── package.json         # Configuração do monorepo
+│       │   ├── components/       # Componentes React reutilizáveis
+│       │   ├── pages/            # Páginas da aplicação
+│       │   ├── context/          # Context API para gerenciamento de estado
+│       │   ├── hooks/            # Custom hooks
+│       │   ├── types/            # Definições de tipos TypeScript
+│       │   └── lib/              # Utilitários e configurações
+│       └── public/               # Assets estáticos
+├── docs/                         # Documentação e diagramas
+└── package.json                  # Configuração do monorepo
 ```
 
 ### Arquitetura do Backend
@@ -150,38 +143,20 @@ O backend segue os princípios da **Clean Architecture** e **Domain-Driven Desig
 
 ```mermaid
 graph TB
-    subgraph "🌐 Interfaces Externas"
-        Controller[Controllers]
-        Middleware[Middleware]
-        HTTP[HTTP/Express]
-    end
+    A[Controllers] --> B[Services]
+    B --> C[Entities]
+    B --> D[Repositories]
+    D --> E[Database]
 
-    subgraph "📋 Aplicação"
-        Services[Services/Use Cases]
-        DTOs[DTOs]
-    end
+    classDef interface fill:#e1f5fe
+    classDef application fill:#f3e5f5
+    classDef domain fill:#e8f5e8
+    classDef infrastructure fill:#fff3e0
 
-    subgraph "🎯 Domínio"
-        Entities[Entities]
-        BusinessRules[Business Rules]
-        DomainServices[Domain Services]
-    end
-
-    subgraph "🔧 Infraestrutura"
-        Repositories[Repository Implementations]
-        ORM[TypeORM]
-        Database[(SQLite)]
-        DI[Dependency Injection - Inversify]
-    end
-
-    HTTP --> Controller
-    Controller --> Services
-    Services --> Entities
-    Services --> Repositories
-    Repositories --> ORM
-    ORM --> Database
-    DI -.-> Services
-    DI -.-> Repositories
+    class A interface
+    class B application
+    class C domain
+    class D,E infrastructure
 ```
 
 ### Contextos Delimitados (DDD)
@@ -190,27 +165,9 @@ A aplicação é dividida em contextos delimitados seguindo os princípios do DD
 
 ```mermaid
 graph LR
-    subgraph "🔐 Contexto de Autenticação"
-        AuthUser[User]
-        AuthService[AuthService]
-        JWT[JWT Tokens]
-    end
-
-    subgraph "🏦 Contexto de Contas"
-        Account[Account]
-        AccountService[AccountService]
-        AccountRepo[AccountRepository]
-    end
-
-    subgraph "💸 Contexto de Transações"
-        Transaction[Transaction]
-        TransactionService[TransactionService]
-        TransactionRepo[TransactionRepository]
-    end
-
-    AuthService -.->|Autorização| AccountService
-    AuthService -.->|Autorização| TransactionService
-    TransactionService -->|Operações| Account
+    Auth[🔐 Auth] --> Accounts[🏦 Accounts]
+    Auth --> Transactions[💸 Transactions]
+    Transactions --> Accounts
 ```
 
 ### Padrão Unit of Work
@@ -219,24 +176,10 @@ O backend implementa o padrão **Unit of Work** para gerenciar transações de b
 
 ```mermaid
 sequenceDiagram
-    participant C as Controller
-    participant S as Service
-    participant UoW as UnitOfWork
-    participant R as Repository
-    participant DB as Database
-
-    C->>S: Chama operação
-    S->>UoW: start()
-    UoW->>DB: BEGIN TRANSACTION
-    S->>R: Operação 1
-    R->>DB: SQL Query 1
-    S->>R: Operação 2
-    R->>DB: SQL Query 2
-    S->>UoW: commit()
-    UoW->>DB: COMMIT
-    S->>C: Retorna resultado
-
-    Note over S,DB: Em caso de erro, UoW.rollback() é chamado
+    Service->>UnitOfWork: start()
+    Service->>Repository: operation()
+    Service->>UnitOfWork: commit()
+    Note over Service,UnitOfWork: rollback() em caso de erro
 ```
 
 ### Arquitetura do Frontend
@@ -245,48 +188,33 @@ O frontend utiliza React com Context API para gerenciamento de estado e componen
 
 ```mermaid
 graph TB
-    subgraph "🎨 Camada de Apresentação"
-        Pages[Pages]
-        Components[Components]
-        UI[shadcn/ui Components]
-    end
-
-    subgraph "🔄 Gerenciamento de Estado"
-        Context[React Context]
-        Reducers[Reducers]
-        Hooks[Custom Hooks]
-    end
-
-    subgraph "🌐 Comunicação"
-        API[API Calls]
-        Auth[Auth Handler]
-        Types[TypeScript Types]
-    end
-
     Pages --> Components
-    Components --> UI
-    Components --> Hooks
-    Hooks --> Context
-    Context --> Reducers
-    Hooks --> API
-    API --> Auth
+    Components --> Context
+    Context --> API
+
+    classDef ui fill:#e3f2fd
+    classDef state fill:#f1f8e9
+    classDef data fill:#fce4ec
+
+    class Pages,Components ui
+    class Context state
+    class API data
 ```
 
 ## 🤓 Principais decisões arquiteturais
 
 ### 1. **Monorepo com NPM Workspaces**
 
-**Decisão**: Organizar o projeto como um monorepo utilizando NPM Workspaces
+**Decisão**: Organizar o projeto como um monorepo utilizando NPM Workspaces  
 **Justificativa**:
 
 - Facilita o compartilhamento de dependências e configurações entre frontend e backend
-- Permite versionamento unificado e deploy coordenado
 - Simplifica o desenvolvimento local com scripts centralizados
 - Reduz a complexidade de gerenciamento de múltiplos repositórios
 
 ### 2. **Clean Architecture + DDD no Backend**
 
-**Decisão**: Implementar Clean Architecture combinada com Domain-Driven Design
+**Decisão**: Implementar Clean Architecture combinada com Domain-Driven Design  
 **Justificativa**:
 
 - **Separation of Concerns**: Cada camada tem responsabilidades bem definidas
@@ -297,7 +225,7 @@ graph TB
 
 ### 3. **Inversão de Dependência com Inversify**
 
-**Decisão**: Utilizar container de injeção de dependências
+**Decisão**: Utilizar container de injeção de dependências  
 **Justificativa**:
 
 - **Desacoplamento**: Módulos dependem apenas de abstrações (interfaces)
@@ -307,7 +235,7 @@ graph TB
 
 ### 4. **Padrão Unit of Work**
 
-**Decisão**: Implementar Unit of Work para gerenciamento de transações
+**Decisão**: Implementar Unit of Work para gerenciamento de transações  
 **Justificativa**:
 
 - **Consistência de Dados**: Garante que operações sejam atômicas
@@ -317,7 +245,7 @@ graph TB
 
 ### 5. **Validação Dupla (Frontend + Backend)**
 
-**Decisão**: Implementar validação tanto no frontend quanto no backend usando Zod
+**Decisão**: Implementar validação tanto no frontend quanto no backend usando Zod  
 **Justificativa**:
 
 - **Segurança**: Backend valida independente do que vem do frontend
@@ -325,9 +253,19 @@ graph TB
 - **Consistência**: Mesmo schema de validação compartilhado (Zod)
 - **Programação Defensiva**: Múltiplas camadas de proteção contra dados inválidos
 
-### 6. **SQLite para Desenvolvimento**
+### 6. **Tipo Monetário como Inteiro**
 
-**Decisão**: Usar SQLite como banco de dados embarcado
+**Decisão**: Armazenar valores monetários como inteiros (centavos) no banco de dados  
+**Justificativa**:
+
+- **Precisão**: Evita problemas de arredondamento com ponto flutuante
+- **Consistência**: Todos os cálculos financeiros mantêm precisão decimal
+- **Performance**: Operações com inteiros são mais rápidas que decimais
+- **Padrão da Indústria**: Prática comum em sistemas financeiros
+
+### 7. **SQLite para Desenvolvimento**
+
+**Decisão**: Usar SQLite como banco de dados embarcado  
 **Justificativa**:
 
 - **Simplicidade**: Zero configuração para desenvolvimento
@@ -335,9 +273,9 @@ graph TB
 - **Desenvolvimento Rápido**: Ideal para prototipagem e testes
 - **Compatibilidade**: Pode ser migrado para PostgreSQL/MySQL em produção
 
-### 7. **Context API no Frontend**
+### 8. **Context API no Frontend**
 
-**Decisão**: Usar React Context API ao invés de Redux/Zustand
+**Decisão**: Usar React Context API ao invés de Redux/Zustand  
 **Justificativa**:
 
 - **Simplicidade**: Para escopo do projeto, Context API é suficiente
@@ -345,26 +283,48 @@ graph TB
 - **Type Safety**: Integração natural com TypeScript
 - **Padrão Reducer**: Organiza state updates de forma previsível
 
-### 8. **Autenticação JWT Stateless**
+### 9. **Autenticação JWT Simplificada**
 
-**Decisão**: Implementar autenticação stateless com JWT
+**Decisão**: Implementar autenticação básica stateless com JWT  
 **Justificativa**:
 
+- **Subdomínio Genérico**: Autenticação não é core business, apenas identifica usuários
+- **Princípio KISS**: Implementação simples e funcional
 - **Scalabilidade**: Não requer armazenamento de sessão no servidor
-- **Simplicidade**: Token contém todas as informações necessárias
 - **Interoperabilidade**: Padrão amplamente aceito para APIs REST
-- **Segurança**: Tokens podem ser configurados com expiração automática
+
+### 10. **Aplicação Estratégica do DDD**
+
+**Decisão**: Focar no DDD Estratégico, não implementar DDD Tático completo  
+**Justificativa**:
+
+#### **DDD Estratégico Aplicado**:
+
+- **Linguagem Ubíqua**: Terminologia consistente (Account, Transaction, User)
+- **Contextos Delimitados**: Separação clara entre Autenticação, Contas e Transações
+- **Subdomínios Core**: Gestão de contas e transações (core business)
+- **Subdomínios Genéricos**: Autenticação de usuários
+
+#### **DDD Tático NÃO Aplicado**:
+
+- **Eventos de Domínio**: Comunicação síncrona entre módulos via interfaces
+- **Aggregates Complexos**: Entidades simples sem agregados elaborados
+- **Domain Services Avançados**: Lógica concentrada nos Application Services
+- **Repository Pattern Puro**: Implementação simplificada para o escopo do projeto
+
+**Motivo**: Para o escopo de um projeto de demonstração, o DDD Estratégico oferece os benefícios de organização e arquitetura sem a complexidade adicional do DDD Tático completo.
 
 ## 🧠 Lógica de Desenvolvimento
 
 ### Funcionalidades Principais
 
-#### 1. **Sistema de Autenticação**
+#### 1. **Sistema de Autenticação Simplificado**
 
-- **Cadastro de Usuários**: Hash seguro de senhas com bcrypt
-- **Login**: Validação de credenciais e geração de JWT
-- **Middleware de Autenticação**: Verificação automática de tokens em rotas protegidas
-- **Context de Autenticação**: Gerenciamento de estado de login no frontend
+- **Cadastro de Usuários**: Hash de senhas com bcrypt
+- **Login**: Validação simples de credenciais e geração de JWT
+- **Middleware de Autenticação**: Verificação de tokens em rotas protegidas
+- **Princípio KISS**: Implementação funcional sem complexidades desnecessárias
+- **Subdomínio Genérico**: Foco apenas na identificação do usuário
 
 #### 2. **Gestão de Contas Bancárias**
 
@@ -383,24 +343,6 @@ graph TB
 - **Saques (Retirar Fundos)**: Débito com validação de saldo suficiente
 - **Histórico**: Listagem com filtros por período (7 dias, 30 dias, 90 dias, 1 ano, todos)
 - **Atomicidade**: Todas as operações são transacionais (Unit of Work)
-
-### Fluxo de Dados
-
-#### Backend (API Request Flow)
-
-```
-HTTP Request → Middleware → Controller → Service → Repository → Database
-              ↓            ↓          ↓        ↓           ↓
-         Auth Check → Validation → Business Logic → Data Access → SQLite
-```
-
-#### Frontend (State Management Flow)
-
-```
-User Action → Component → Hook → Context → API Call → State Update → Re-render
-            ↓          ↓     ↓        ↓         ↓            ↓
-        Event Handler → Custom Hook → Reducer → HTTP Request → UI Update
-```
 
 ### Padrões de Validação
 
@@ -438,111 +380,26 @@ User Action → Component → Hook → Context → API Call → State Update →
 
 ### Estratégia de Testes
 
-O projeto implementa uma **estratégia de testes abrangente** focada em **testes unitários** para garantir a qualidade e confiabilidade do código, especialmente crucial em uma aplicação financeira.
+O projeto implementa **testes unitários** focados na lógica de negócio do backend, garantindo a confiabilidade das regras financeiras críticas.
 
-### Cobertura de Testes
+### Principais Testes Implementados
 
-**Cobertura Atual**: `100% de statements`, `89.17% de branches`, `100% de funções`
+#### **Entidades de Domínio**
 
-```
---------------------------------|---------|----------|---------|---------|
-File                            | % Stmts | % Branch | % Funcs | % Lines |
---------------------------------|---------|----------|---------|---------|
-All files                       |     100 |    89.17 |     100 |     100 |
- entities                       |     100 |      100 |     100 |     100 |
- errors                         |     100 |    85.71 |     100 |     100 |
- infrastructure                 |     100 |      100 |     100 |     100 |
- repositories                   |     100 |      100 |     100 |     100 |
- services                       |     100 |    84.31 |     100 |     100 |
-```
+- **Account**: Validações de criação, tipos e saldos
+- **Transaction**: Builders de transação e validações de negócio
+- **User**: Criação de usuário e validações de dados
 
-### Estrutura de Testes
+#### **Services (Regras de Negócio)**
 
-#### 1. **Testes de Entidades** (`entities/`)
+- **AccountService**: CRUD de contas, validações de propriedade e saldos
+- **TransactionService**: Transferências, validações de saldo, operações atômicas
+- **UserService**: Cadastro, autenticação e hash de senhas
 
-- **Account.test.ts**: Validações de criação de conta, types, saldos
-- **Transaction.test.ts**: Builders de transação, validações de negócio
-- **User.test.ts**: Criação de usuário, validações de dados
-
-#### 2. **Testes de Serviços** (`services/`)
-
-- **AccountService.test.ts**:
-
-  - Criação, listagem, atualização e exclusão de contas
-  - Validações de propriedade (usuário só opera suas contas)
-  - Validações de saldo mínimo/máximo
-  - Transações atômicas com Unit of Work
-
-- **TransactionService.test.ts**:
-
-  - Transferências entre contas
-  - Adição e retirada de fundos
-  - Validações de saldo suficiente
-  - Listagem com filtros de período
-
-- **UserService.test.ts**:
-  - Cadastro de usuários
-  - Autenticação e geração de tokens
-  - Validações de email único
-  - Hash de senhas
-
-#### 3. **Sistema de Mocks** (`__tests__/mocks/`)
-
-- **UnitOfWorkMock**: Simula transações de banco de dados
-- **AccountRepositoryMock**: Mock do repositório de contas
-- **UserRepositoryMock**: Mock do repositório de usuários
-- **TransactionRepositoryMock**: Mock do repositório de transações
-- **IdGeneratorMock**: Mock para geração de IDs determinísticos
-- **PasswordHasherMock**: Mock para hash de senhas
-- **TokenServiceMock**: Mock para geração de tokens
-
-### Ferramentas e Configuração
-
-#### Jest Configuration
-
-- **Test Environment**: Node.js
-- **Coverage Provider**: V8 (mais rápido e preciso)
-- **TypeScript**: Integração com ts-jest
-- **Coverage Directory**: `./coverage/`
-- **Reports**: HTML, LCOV, JSON, XML (Clover)
-
-#### Comandos de Teste
+### Execução dos Testes
 
 ```bash
-# Executar todos os testes
 npm run test
-
-# Executar testes no backend
-npm run test -w @techlab25/backend
-
-# Executar testes com watch mode
-npm run test:watch -w @techlab25/backend
 ```
 
-### Testes de Integração (Planejado)
-
-Para futuras iterações, estão planejados:
-
-- **Testes de API**: Validação completa dos endpoints
-- **Testes de Banco de Dados**: Operações reais com SQLite
-- **Testes End-to-End**: Automação completa frontend + backend
-
-### Qualidade dos Testes
-
-#### Características dos Testes Implementados:
-
-- **Isolamento**: Cada teste é independente usando mocks
-- **Determinismo**: Resultados previsíveis com dados controlados
-- **Cobertura de Cenários**: Testes para casos de sucesso e falha
-- **Validação de Regras de Negócio**: Foco em lógica financeira crítica
-- **Programação Defensiva**: Validação de entradas e estados inválidos
-
-#### Cenários Críticos Testados:
-
-- ✅ Transações atômicas (rollback em caso de erro)
-- ✅ Validações de saldo suficiente
-- ✅ Autorização (usuário só acessa suas contas)
-- ✅ Regras de negócio financeiras (valores mínimos/máximos)
-- ✅ Hash seguro de senhas
-- ✅ Geração e validação de tokens JWT
-- ✅ Builders de transação com validações específicas
+A estratégia priorizou testar a lógica de negócio crítica usando mocks para isolamento, garantindo que as regras financeiras funcionem corretamente independente da infraestrutura.
