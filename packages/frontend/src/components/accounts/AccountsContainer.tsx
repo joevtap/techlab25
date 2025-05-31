@@ -31,6 +31,12 @@ export function AccountsContainer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (accounts.length > 0 && !selectedAccountId) {
+      setSelectedAccountId(accounts[0].id);
+    }
+  }, [accounts, selectedAccountId, setSelectedAccountId]);
+
   const totalBalance = accounts.reduce(
     (sum, account) => sum + account.balance,
     0,
