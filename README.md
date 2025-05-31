@@ -7,7 +7,7 @@ Minha entrega para o desafio WebApp do TechLab 2025, desafio de programação, I
 ## 📜 Índice
 
 - [🚀 Como rodar o projeto](#-como-rodar-o-projeto)
-- [❓ Sobre]()
+- [❓ Sobre](#-sobre)
 - [⚛️ Tecnologias utilizadas]()
 - [🏗️ Estrutura do projeto]()
 - [🤓 Principais decisões arquiteturais]()
@@ -60,3 +60,33 @@ npm run dev:frontend
 Se não modificou nenhuma variável de ambiente, o frontend estará rodando em http://localhost:5173.
 
 Acesse a referência da API do backend em http://localhost:8080/reference.
+
+## ❓ Sobre
+
+> O enunciado do desafio se encontra [Aqui](<https://github.com/tech4humans-brasil/techlab-ceu/blob/main/Finan%C3%A7as%20(Webapp)/Desafio%20WebApp.pdf>)
+
+O projeto consiste em uma pequena aplicação financeira em que é possível criar, listar, editar e deletar contas bancárias, além de realizar operações financeiras entre elas.
+
+Além do proposto no enunciado do desafio, minha implementação inclui uma funcionalidade de cadastro e autenticação do usuário. Fiz essa adição porque senti que era algo que faltava para dar mais sentido à aplicação: contas bancárias terem donos e um usuário poder se identificar para operar apenas em cima de suas contas.
+
+A implementação consiste em um backend e um frontend, os dois utilizando a linguagem typescript e se comunicando por meio de uma API HTTP. Toda a lógica de negócios se encontra no backend, mas a validação das entradas do usuário é feita em ambas as pontas.
+
+Mais detalhes sobre o backend e o frontend podem ser encontrados em suas respectivas pastas:
+
+- [Backend](./packages/backend/README.md)
+- [Frontend](./packages/frontend/README.md)
+
+## ⚛️ Tecnologias utilizadas
+
+- Node (v22.15.1)
+- Typescript
+- Jest
+- Inversify
+- TypeORM
+- SQLite
+- Git
+- Scalar UI
+- OpenAPI Spec
+
+- React
+- TailwindCSS
