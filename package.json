@@ -17,8 +17,8 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "prestart:backend": "npm run build -w @techlab25/backend",
-    "start:backend": "npm run start -w @techlab25/backend"
+    "dev:backend": "npm run dev -w @techlab25/backend",
+    "dev:frontend": "npm run dev -w @techlab25/frontend"
   },
   "repository": {
     "type": "git",
